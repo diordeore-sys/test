@@ -3,762 +3,844 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AVERY CYERE</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <title>Amistad Coffee — Atlanta, GA</title>
+    <meta name="description" content="Amistad Coffee — a Mexican-owned specialty coffee shop in Midtown Atlanta. Espresso, pour-overs, and pastries from owner Oscar Luquin.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --cream: #f6f1e7;
+            --cream-dark: #ece4d2;
+            --espresso: #2b1d12;
+            --espresso-soft: #3d2a1b;
+            --crema: #c89770;
+            --terracotta: #b85c3a;
+            --ink: #1a1208;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; }
+
         body {
-            background-color: #000000;
-            color: #ffffff;
-            font-family: 'Space Mono', monospace;
-            overflow-x: hidden;
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--cream);
+            color: var(--espresso);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
         }
-        h1, h2, h3, h4, h5, h6, .heading-font {
-            font-family: 'Oswald', sans-serif;
+
+        h1, h2, h3, h4 {
+            font-family: 'Fraunces', Georgia, serif;
+            font-weight: 600;
+            line-height: 1.1;
+            letter-spacing: -0.01em;
         }
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #000;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #cc0000;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #ff0000;
-        }
-        
-        /* Grain Texture Overlay */
-        .grain-overlay {
+
+        a { color: inherit; text-decoration: none; }
+        img { max-width: 100%; display: block; }
+
+        /* ===== NAV ===== */
+        nav {
             position: fixed;
-            top: 0;
-            left: 0;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            background: rgba(246, 241, 231, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(43, 29, 18, 0.08);
+        }
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 18px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-family: 'Fraunces', serif;
+            font-weight: 800;
+            font-size: 22px;
+            letter-spacing: -0.02em;
+        }
+        .logo i { font-style: italic; color: var(--terracotta); }
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .nav-links a {
+            position: relative;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--terracotta); }
+        .nav-cta {
+            background: var(--espresso);
+            color: var(--cream);
+            padding: 10px 20px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 500;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .nav-cta:hover { background: var(--terracotta); transform: translateY(-1px); }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: 0;
+            cursor: pointer;
+            padding: 8px;
+        }
+        .menu-toggle svg { width: 24px; height: 24px; stroke: var(--espresso); }
+
+        /* ===== HERO ===== */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 120px 32px 80px;
+            overflow: hidden;
+        }
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(184, 92, 58, 0.18), transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(200, 151, 112, 0.25), transparent 55%),
+                var(--cream);
+            z-index: -1;
+        }
+        .hero-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 64px;
+            align-items: center;
+            width: 100%;
+        }
+        .hero-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--espresso-soft);
+            margin-bottom: 24px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+        .hero-eyebrow .dot {
+            width: 8px;
+            height: 8px;
+            background: var(--terracotta);
+            border-radius: 50%;
+        }
+        .hero h1 {
+            font-size: clamp(48px, 7vw, 88px);
+            margin-bottom: 28px;
+            color: var(--ink);
+        }
+        .hero h1 i { color: var(--terracotta); font-weight: 400; }
+        .hero p.lead {
+            font-size: 18px;
+            color: var(--espresso-soft);
+            max-width: 480px;
+            margin-bottom: 36px;
+        }
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: transform 0.2s, background 0.2s, color 0.2s;
+            cursor: pointer;
+            border: 0;
+        }
+        .btn-primary {
+            background: var(--espresso);
+            color: var(--cream);
+        }
+        .btn-primary:hover { background: var(--terracotta); transform: translateY(-2px); }
+        .btn-secondary {
+            background: transparent;
+            color: var(--espresso);
+            border: 1px solid var(--espresso);
+        }
+        .btn-secondary:hover { background: var(--espresso); color: var(--cream); }
+
+        .hero-image {
+            position: relative;
+            aspect-ratio: 4/5;
+            border-radius: 20px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #4a2f1e 0%, #2b1d12 100%);
+            box-shadow: 0 30px 60px -20px rgba(43, 29, 18, 0.4);
+        }
+        .hero-image img {
             width: 100%;
             height: 100%;
-            pointer-events: none;
-            z-index: 50;
-            opacity: 0.05;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            object-fit: cover;
+        }
+        .hero-image::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.3));
         }
 
-        /* Glitch Animation for VHS feel */
-        @keyframes glitch {
-            0% { transform: translate(0) }
-            20% { transform: translate(-2px, 2px) }
-            40% { transform: translate(-2px, -2px) }
-            60% { transform: translate(2px, 2px) }
-            80% { transform: translate(2px, -2px) }
-            100% { transform: translate(0) }
+        .badge {
+            position: absolute;
+            background: var(--cream);
+            color: var(--espresso);
+            border-radius: 16px;
+            padding: 16px 20px;
+            box-shadow: 0 12px 30px rgba(43, 29, 18, 0.18);
+            font-size: 13px;
         }
-        .glitch-hover:hover {
-            animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
-            color: #cc0000;
+        .badge strong {
+            display: block;
+            font-family: 'Fraunces', serif;
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+        .badge-rating {
+            top: 28px;
+            left: -28px;
+        }
+        .badge-rating .stars {
+            color: var(--terracotta);
+            font-size: 16px;
+            letter-spacing: 2px;
+        }
+        .badge-est {
+            bottom: 32px;
+            right: -24px;
+            text-align: center;
         }
 
-        /* Red Glow */
-        .red-glow:hover {
-            box-shadow: 0 0 15px rgba(204, 0, 0, 0.6);
-            border-color: #cc0000;
+        /* ===== SECTIONS ===== */
+        section {
+            padding: 100px 32px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .section-eyebrow {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--terracotta);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 16px;
+        }
+        .section-title {
+            font-size: clamp(36px, 5vw, 56px);
+            margin-bottom: 24px;
+            color: var(--ink);
+        }
+        .section-title i { color: var(--terracotta); font-weight: 400; }
+
+        /* ===== STORY ===== */
+        .story {
+            background: var(--cream-dark);
+        }
+        .story-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+        .story p {
+            font-size: 17px;
+            color: var(--espresso-soft);
+            margin-bottom: 20px;
+        }
+        .story-image {
+            aspect-ratio: 1/1;
+            border-radius: 20px;
+            overflow: hidden;
+            background: var(--espresso);
+        }
+        .story-image img {
+            width: 100%; height: 100%; object-fit: cover;
         }
 
-        /* Hide scrollbar for horizontal scroll areas but keep functionality */
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 40px;
+            padding-top: 32px;
+            border-top: 1px solid rgba(43, 29, 18, 0.15);
         }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
+        .stat strong {
+            display: block;
+            font-family: 'Fraunces', serif;
+            font-size: 36px;
+            color: var(--terracotta);
+            font-weight: 600;
+        }
+        .stat span {
+            font-size: 13px;
+            color: var(--espresso-soft);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        /* ===== MENU ===== */
+        .menu-tabs {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 56px;
+            flex-wrap: wrap;
+        }
+        .menu-tab {
+            background: transparent;
+            border: 1px solid rgba(43, 29, 18, 0.2);
+            color: var(--espresso);
+            padding: 10px 22px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        .menu-tab:hover { border-color: var(--espresso); }
+        .menu-tab.active {
+            background: var(--espresso);
+            color: var(--cream);
+            border-color: var(--espresso);
+        }
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px 64px;
+        }
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 18px 0;
+            border-bottom: 1px dashed rgba(43, 29, 18, 0.18);
+            gap: 24px;
+        }
+        .menu-item-info h4 {
+            font-size: 19px;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+        .menu-item-info p {
+            font-size: 14px;
+            color: var(--espresso-soft);
+            line-height: 1.4;
+        }
+        .menu-item-price {
+            font-family: 'Fraunces', serif;
+            font-size: 18px;
+            color: var(--terracotta);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .menu-panel { display: none; }
+        .menu-panel.active { display: grid; }
+
+        /* ===== VISIT (location + hours) ===== */
+        .visit {
+            background: var(--espresso);
+            color: var(--cream);
+        }
+        .visit .section-title { color: var(--cream); }
+        .visit .section-eyebrow { color: var(--crema); }
+        .visit-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+            align-items: start;
+        }
+        .visit-info dl {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 16px 24px;
+            margin-top: 32px;
+        }
+        .visit-info dt {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--crema);
+            padding-top: 4px;
+        }
+        .visit-info dd {
+            font-size: 16px;
+            color: var(--cream);
+        }
+        .hours-list {
+            list-style: none;
+        }
+        .hours-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+        }
+        .hours-list li.today {
+            color: var(--crema);
+            font-weight: 500;
+        }
+        .map-frame {
+            border-radius: 20px;
+            overflow: hidden;
+            aspect-ratio: 4/5;
+            border: 1px solid rgba(246, 241, 231, 0.15);
+        }
+        .map-frame iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            filter: grayscale(0.2) contrast(1.05);
+        }
+        .visit .btn-primary {
+            background: var(--cream);
+            color: var(--espresso);
+            margin-top: 32px;
+        }
+        .visit .btn-primary:hover {
+            background: var(--terracotta);
+            color: var(--cream);
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: var(--ink);
+            color: var(--cream);
+            padding: 64px 32px 32px;
+        }
+        .footer-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 48px;
+            margin-bottom: 48px;
+        }
+        footer h4 {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 20px;
+            color: var(--crema);
+        }
+        footer ul { list-style: none; }
+        footer li { margin-bottom: 10px; font-size: 14px; }
+        footer a:hover { color: var(--terracotta); }
+        .footer-tag {
+            font-family: 'Fraunces', serif;
+            font-size: 28px;
+            margin-bottom: 12px;
+        }
+        .footer-tag i { color: var(--terracotta); }
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 24px;
+            border-top: 1px solid rgba(246, 241, 231, 0.1);
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: rgba(246, 241, 231, 0.6);
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 860px) {
+            .nav-links, .nav-cta { display: none; }
+            .menu-toggle { display: block; }
+            .nav-links.open {
+                display: flex;
+                position: absolute;
+                top: 100%;
+                left: 0; right: 0;
+                background: var(--cream);
+                flex-direction: column;
+                padding: 24px 32px;
+                gap: 20px;
+                border-bottom: 1px solid rgba(43, 29, 18, 0.08);
+            }
+            .hero-grid, .story-grid, .visit-grid {
+                grid-template-columns: 1fr;
+                gap: 48px;
+            }
+            .hero { padding-top: 100px; }
+            .menu-grid { grid-template-columns: 1fr; gap: 0 32px; }
+            .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+            section { padding: 72px 24px; }
+            .badge-rating { left: 12px; }
+            .badge-est { right: 12px; }
+        }
+
+        @media (max-width: 480px) {
+            .stats { grid-template-columns: 1fr 1fr; }
+            .visit-info dl { grid-template-columns: 1fr; gap: 4px 0; }
+            .visit-info dd { margin-bottom: 12px; }
         }
     </style>
 </head>
 <body>
-    <div id="root"></div>
-    <div class="grain-overlay"></div>
 
-    <script type="text/babel">
-        const { useState, useEffect, useRef } = React;
+    <!-- NAV -->
+    <nav>
+        <div class="nav-inner">
+            <a href="#top" class="logo">Amistad <i>Coffee</i></a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#story">Story</a></li>
+                <li><a href="#menu">Menu</a></li>
+                <li><a href="#visit">Visit</a></li>
+                <li><a href="#visit" class="nav-cta">Get Directions</a></li>
+            </ul>
+            <button class="menu-toggle" aria-label="Menu" onclick="document.getElementById('navLinks').classList.toggle('open')">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </button>
+        </div>
+    </nav>
 
-        // ==========================================
-        // CENTRALIZED CONTENT CONFIGURATION
-        // EDIT THIS OBJECT TO UPDATE THE ENTIRE SITE
-        // ==========================================
-        const siteConfig = {
-            artistName: "AVERY CYERE",
-            tagline: "UNDERGROUND // ATMOSPHERIC // RAW",
-            metaDescription: "Official website of Avery Cyere",
-            
-            navLinks: [
-                { label: "HOME", href: "#home" },
-                { label: "MUSIC", href: "#music" },
-                { label: "VIDEOS", href: "#videos" },
-                { label: "ABOUT", href: "#about" },
-                { label: "PHOTOS", href: "#photos" },
-                { label: "BLOG", href: "#blog" },
-                { label: "MERCH", href: "#merch" },
-                { label: "CONNECT", href: "#connect" },
-            ],
-            
-            hero: {
-                backgroundImage: "https://picsum.photos/seed/cyere-hero/1920/1080",
-                headline: "AVERY CYERE",
-                subtext: "ENTER THE VOID",
-                ctaText: "ENTER",
-            },
-            
-            music: {
-                heading: "MUSIC",
-                releases: [
-                    {
-                        title: "XZEMA",
-                        type: "Single",
-                        date: "2024",
-                        coverArt: "https://picsum.photos/seed/xzema/800/800",
-                        description: "cyere type beat",
-                        links: {
-                            spotify: "https://open.spotify.com/artist/1LfkFyKfxAx4bo7NQOG2sk",
-                            apple: "https://music.apple.com/us/artist/avery-cyere/1524435633",
-                            tidal: "https://tidal.com/artist/20527797",
-                            deezer: "https://www.deezer.com/us/artist/101520712",
-                            amazon: "https://www.amazon.com/music/player/artists/B08DC76KNY/avery-cyere",
-                            youtubeMusic: "https://music.youtube.com/@cyeremusic",
-                            pandora: "https://www.pandora.com/artist/avery-cyere/ARPJgnhvzvPK9n6",
-                        }
-                    },
-                    {
-                        title: "NOCTURNE",
-                        type: "EP",
-                        date: "2023",
-                        coverArt: "https://picsum.photos/seed/nocturne/800/800",
-                        description: "Late night sessions.",
-                        links: {
-                            spotify: "#",
-                            apple: "#",
-                        }
-                    }
-                ]
-            },
-            
-            videos: {
-                heading: "VIDEOS",
-                items: [
-                    {
-                        title: "XZEMA VISUALIZER",
-                        youtubeId: "dQw4w9WgXcQ",
-                        thumbnail: "https://picsum.photos/seed/visualizer/1280/720",
-                    },
-                    {
-                        title: "BEHIND THE SCENES",
-                        youtubeId: "dQw4w9WgXcQ",
-                        thumbnail: "https://picsum.photos/seed/bts/1280/720",
-                    }
-                ]
-            },
-            
-            about: {
-                heading: "ABOUT",
-                image: "https://picsum.photos/seed/portrait/800/1000",
-                bio: [
-                    "The sound of concrete and neon. I make music for the night crawlers and the early morning thinkers.",
-                    "No labels. No rules. Just raw emotion translated into frequency.",
-                    "Based in the underground. Inspired by the silence between city noises."
-                ],
-                quote: "WE ARE THE MUSIC MAKERS, AND WE ARE THE DREAMERS OF DREAMS.",
-                quoteAuthor: "AVERY CYERE",
-            },
-            
-            photos: {
-                heading: "VISUALS",
-                images: [
-                    { src: "https://picsum.photos/seed/vhs/600/800", alt: "VHS Glitch" },
-                    { src: "https://picsum.photos/seed/garage/600/600", alt: "Parking Garage" },
-                    { src: "https://picsum.photos/seed/halftone/600/700", alt: "Halftone" },
-                    { src: "https://picsum.photos/seed/fabric/600/900", alt: "Fabric Spine" },
-                    { src: "https://picsum.photos/seed/portrait2/600/800", alt: "Portrait" },
-                    { src: "https://picsum.photos/seed/cover/600/600", alt: "XZEMA Cover" },
-                ]
-            },
-            
-            blog: {
-                heading: "JOURNAL",
-                posts: [
-                    {
-                        id: 1,
-                        date: "2024-05-18",
-                        title: "STUDIO LOCK IN",
-                        type: "text",
-                        content: "Locked in the studio for 48 hours. No sleep, just frequencies. New material coming sooner than you think. The walls are vibrating.",
-                        tags: ["studio", "new music", "raw"],
-                    },
-                    {
-                        id: 2,
-                        date: "2024-04-12",
-                        title: "INSPIRATION",
-                        type: "quote",
-                        content: "Sometimes the darkest places produce the brightest sounds.",
-                        tags: ["thoughts"],
-                    }
-                ]
-            },
-            
-            merch: {
-                heading: "MERCH",
-                products: [
-                    {
-                        id: 1,
-                        name: "XZEMA LONGSLEEVE",
-                        price: 45,
-                        image: "https://picsum.photos/seed/longsleeve/800/1000",
-                        description: "Heavy cotton. Red spine print.",
-                        sizes: ["S", "M", "L", "XL"],
-                        inStock: true,
-                    },
-                    {
-                        id: 2,
-                        name: "VHS GLITCH TEE",
-                        price: 35,
-                        image: "https://picsum.photos/seed/tee/800/1000",
-                        description: "Limited run. Distressed fit.",
-                        sizes: ["M", "L", "XL"],
-                        inStock: true,
-                    }
-                ]
-            },
-            
-            connect: {
-                heading: "CONNECT",
-                links: [
-                    { platform: "Spotify", url: "https://open.spotify.com/artist/1LfkFyKfxAx4bo7NQOG2sk", icon: "spotify" },
-                    { platform: "Apple Music", url: "https://music.apple.com/us/artist/avery-cyere/1524435633", icon: "apple" },
-                    { platform: "Tidal", url: "https://tidal.com/artist/20527797", icon: "tidal" },
-                    { platform: "YouTube", url: "https://www.youtube.com/@cyeremusic", icon: "youtube" },
-                    { platform: "TikTok", url: "https://www.tiktok.com/@cyeremusic", icon: "tiktok" },
-                    { platform: "Instagram", url: "https://www.instagram.com/bellumthelabel", icon: "instagram", handle: "@bellumthelabel" },
-                ],
-                newsletter: {
-                    heading: "STAY UPDATED",
-                    placeholder: "ENTER EMAIL...",
-                    buttonText: "\u2192",
-                }
-            },
-            
-            footer: {
-                copyright: "\u00a9 2024 AVERY CYERE. ALL RIGHTS RESERVED.",
-                credits: "DESIGN BY CYERE",
+    <!-- HERO -->
+    <section class="hero" id="top">
+        <div class="hero-bg"></div>
+        <div class="hero-grid">
+            <div>
+                <div class="hero-eyebrow"><span class="dot"></span> Midtown Atlanta · Mexican-Owned</div>
+                <h1>Slow coffee for <i>fast</i> mornings.</h1>
+                <p class="lead">Café con amistad — coffee with friendship. A specialty coffee shop in Midtown Atlanta from owner Oscar Luquin, pulling Mexican heritage into every cup.</p>
+                <div class="hero-buttons">
+                    <a href="#menu" class="btn btn-primary">See the menu →</a>
+                    <a href="#visit" class="btn btn-secondary">Visit us</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="https://images.unsplash.com/photo-1453614512568-c4024d13c247?w=900&q=80" alt="Cup of coffee on a wooden table" onerror="this.style.display='none'">
+                <div class="badge badge-rating">
+                    <div class="stars">★★★★★</div>
+                    <strong>4.8 / 5</strong>
+                    <span>local favorite</span>
+                </div>
+                <div class="badge badge-est">
+                    <strong>EST.</strong>
+                    <span>since day one</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- STORY -->
+    <section class="story" id="story">
+        <div class="container">
+            <div class="story-grid">
+                <div class="story-image">
+                    <img src="https://images.unsplash.com/photo-1559496417-e7f25cb247f3?w=900&q=80" alt="Barista pulling espresso shots" onerror="this.style.background='linear-gradient(135deg, #b85c3a, #2b1d12)'">
+                </div>
+                <div>
+                    <div class="section-eyebrow">Our Story</div>
+                    <h2 class="section-title">From Michoacán <i>to Midtown</i>.</h2>
+                    <p>"Amistad" means friendship — and that's what we're brewing. Owner Oscar Luquin grew up in Michoacán, Mexico, where coffee is woven into daily life. He brought that warmth and tradition to Atlanta, opening Amistad Coffee as a love letter to both places.</p>
+                    <p>Every cup is sourced thoughtfully, roasted in small batches, and pulled with care. Whether you're grabbing a quick cortado on the way to work or setting up shop for the afternoon, we want this to feel like home — wherever home is for you.</p>
+                    <div class="stats">
+                        <div class="stat">
+                            <strong>Mich.</strong>
+                            <span>Owner's roots</span>
+                        </div>
+                        <div class="stat">
+                            <strong>Small</strong>
+                            <span>Batch roasted</span>
+                        </div>
+                        <div class="stat">
+                            <strong>100%</strong>
+                            <span>Specialty grade</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MENU -->
+    <section id="menu">
+        <div class="container">
+            <div style="text-align: center; max-width: 600px; margin: 0 auto 48px;">
+                <div class="section-eyebrow">The Menu</div>
+                <h2 class="section-title">Café con <i>amistad</i>.</h2>
+                <p style="color: var(--espresso-soft); font-size: 17px;">Coffee with friendship — classic builds and Mexican-inspired specialty lattes.</p>
+            </div>
+
+            <div class="menu-tabs">
+                <button class="menu-tab active" data-tab="classic">Classic Coffee</button>
+                <button class="menu-tab" data-tab="specialty">Specialty Lattes</button>
+                <button class="menu-tab" data-tab="tea">Tea</button>
+                <button class="menu-tab" data-tab="extras">Add-Ons</button>
+                <button class="menu-tab" data-tab="bites">Pan Dulce</button>
+            </div>
+
+            <div class="menu-panel active" data-panel="classic">
+                <div class="menu-item">
+                    <div class="menu-item-info">
+                        <h4>Latte</h4>
+                        <p>Smooth, silky, balanced.</p>
+                    </div>
+                    <div class="menu-item-price">$6</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-info">
+                        <h4>Cappuccino</h4>
+                        <p>Classic with a thick, dry foam.</p>
+                    </div>
+                    <div class="menu-item-price">$5.50</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-info">
+                        <h4>Flat White</h4>
+                        <p>Velvety microfoam, espresso-forward.</p>
+                    </div>
+                    <div class="menu-item-price">$5.50</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-info">
+                        <h4>Cortado</h4>
+                        <p>Equal parts espresso and steamed milk.</p>
+                    </div>
+                    <div class="menu-item-price">$5</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-info">
+                        <h4>Iced Coffee</h4>
+                        <p>Cold and clean.</p>
+                    </div>
+                    <div class="menu-item-price">$5</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-info">
+                        <h4>Americano</h4>
+                        <p>Double espresso + hot water.</p>
+                    </div>
+                    <div class="menu-item-price">$4.50</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-info">
+                        <h4>Drip</h4>
+                        <p>Rotating selection. Small or large.</p>
+                    </div>
+                    <div class="menu-item-price">$3.50 / $4</div>
+                </div>
+            </div>
+
+            <div class="menu-panel" data-panel="specialty">
+                <div class="menu-item">
+                    <div class="menu-item-info">
+                        <h4>Horchata <span style="color: var(--terracotta); font-size: 12px;">*</span></h4>
+                        <p>Spiced rice milk.</p>
+                    </div>
+                    <div class="menu-item-price">$7</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-info">
+                        <h4>Mazapan <span style="color: var(--terracotta); font-size: 12px;">*</span></h4>
+                        <p>Mexican peanut candy.</p>
+                    </div>
+                    <div class="menu-item-price">$7</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-info">
+                        <h4>Elote <span style="color: var(--terracotta); font-size: 12px;">*</span></h4>
+                        <p>Sweet corn infused milk.</p>
+                    </div>
+                    <div class="menu-item-price">$7</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-info">
+                        <h4>Matcha Con Fresas <span style="color: var(--terracotta); font-size: 12px;">*</span></h4>
+                        <p>Iced strawberry matcha.</p>
+                    </div>
+                    <div class="menu-item-price">$7.50</div>
+                </div>
+                <p style="grid-column: 1 / -1; font-size: 13px; color: var(--espresso-soft); font-style: italic; margin-top: 12px;"><span style="color: var(--terracotta);">*</span> contains dairy</p>
+            </div>
+
+            <div class="menu-panel" data-panel="tea">
+                <div class="menu-item">
+                    <div class="menu-item-info">
+                        <h4>Matcha Latte</h4>
+                        <p>Whisked, ceremonial-grade.</p>
+                    </div>
+                    <div class="menu-item-price">$6</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-info">
+                        <h4>Chai Latte</h4>
+                        <p>House-spiced, cardamom forward.</p>
+                    </div>
+                    <div class="menu-item-price">$6</div>
+                </div>
+            </div>
+
+            <div class="menu-panel" data-panel="extras">
+                <div class="menu-item">
+                    <div class="menu-item-info">
+                        <h4>Extra Shot</h4>
+                        <p>One more pull of espresso.</p>
+                    </div>
+                    <div class="menu-item-price">+$1</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-info">
+                        <h4>Alternative Milk</h4>
+                        <p>Oat or almond.</p>
+                    </div>
+                    <div class="menu-item-price">+$1</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-item-info">
+                        <h4>House-Made Syrups</h4>
+                        <p>Vanilla, caramel, honey, mocha, strawberry, blueberry.</p>
+                    </div>
+                    <div class="menu-item-price">—</div>
+                </div>
+            </div>
+
+            <div class="menu-panel" data-panel="bites">
+                <div class="menu-item" style="grid-column: 1 / -1;">
+                    <div class="menu-item-info">
+                        <h4>Pan Dulce</h4>
+                        <p>Rotating selection of traditional Mexican sweet breads — conchas, orejas, cuernos, and more. Ask about today's bake.</p>
+                    </div>
+                    <div class="menu-item-price">market</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- VISIT -->
+    <section class="visit" id="visit">
+        <div class="container">
+            <div class="visit-grid">
+                <div class="visit-info">
+                    <div class="section-eyebrow">Come Say Hi</div>
+                    <h2 class="section-title">Find us in <i>Midtown</i>.</h2>
+                    <p style="color: var(--cream); opacity: 0.85; font-size: 17px; max-width: 460px;">Tucked into Midtown Atlanta. Stop in for a cortado or stay a while — we'll save you a seat.</p>
+
+                    <dl>
+                        <dt>Address</dt>
+                        <dd>1270 W Peachtree St NW<br>Atlanta, GA 30309</dd>
+
+                        <dt>Hours</dt>
+                        <dd>
+                            <ul class="hours-list">
+                                <li><span>Monday</span><span>7am — 3pm</span></li>
+                                <li><span>Tuesday</span><span>7am — 3pm</span></li>
+                                <li><span>Wednesday</span><span>7am — 3pm</span></li>
+                                <li><span>Thursday</span><span>7am — 3pm</span></li>
+                                <li><span>Friday</span><span>7am — 3pm</span></li>
+                                <li><span>Saturday</span><span>7am — 3pm</span></li>
+                                <li><span>Sunday</span><span>7am — 3pm</span></li>
+                            </ul>
+                            <p style="font-size: 12px; color: var(--crema); margin-top: 8px; font-style: italic;">Holiday hours may vary.</p>
+                        </dd>
+
+                        <dt>Phone</dt>
+                        <dd><a href="tel:+12053325634" style="color: var(--cream); text-decoration: underline; text-decoration-color: rgba(246,241,231,0.3);">(205) 332-5634</a></dd>
+                    </dl>
+
+                    <a href="https://www.google.com/maps/dir/?api=1&destination=1270+W+Peachtree+St+NW%2C+Atlanta%2C+GA+30309&destination_place_id=ChIJPyDszbIF9YgRtJR4A8uG84o" target="_blank" rel="noopener" class="btn btn-primary">Get directions →</a>
+                </div>
+
+                <div class="map-frame">
+                    <iframe
+                        src="https://www.google.com/maps?q=1270+W+Peachtree+St+NW%2C+Atlanta%2C+GA+30309&z=16&output=embed"
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                        title="Amistad Coffee location map"
+                        allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <div class="footer-tag">Amistad <i>Coffee</i></div>
+                <p style="color: rgba(246,241,231,0.7); max-width: 320px; font-size: 14px;">Café con amistad. Stop in, stay a while.</p>
+            </div>
+            <div>
+                <h4>Visit</h4>
+                <ul>
+                    <li>1270 W Peachtree St NW</li>
+                    <li>Atlanta, GA 30309</li>
+                    <li><a href="tel:+12053325634">(205) 332-5634</a></li>
+                    <li>Open daily, 7am–3pm</li>
+                </ul>
+            </div>
+            <div>
+                <h4>Follow</h4>
+                <ul>
+                    <li><a href="https://www.instagram.com/amistadcoffeeco/" target="_blank" rel="noopener">Instagram</a></li>
+                    <li><a href="https://www.tiktok.com/@amistadcoffee" target="_blank" rel="noopener">TikTok</a></li>
+                    <li><a href="https://www.google.com/maps/place/Amistad+Coffee" target="_blank" rel="noopener">Google Maps</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>© <span id="year"></span> Amistad Coffee. All rights reserved.</span>
+            <span>Made with care in Atlanta.</span>
+        </div>
+    </footer>
+
+    <script>
+        // Year
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Highlight today's hours
+        const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+        const todayName = days[new Date().getDay()];
+        document.querySelectorAll('.hours-list li').forEach(li => {
+            if (li.querySelector('span').textContent.trim() === todayName) {
+                li.classList.add('today');
+            } else {
+                li.classList.remove('today');
             }
-        };
+        });
 
-        // ==========================================
-        // COMPONENTS
-        // ==========================================
-
-        const CartContext = React.createContext();
-
-        const CartProvider = ({ children }) => {
-            const [cart, setCart] = useState(() => {
-                try {
-                    return JSON.parse(localStorage.getItem('cyere_cart')) || [];
-                } catch { return []; }
+        // Menu tabs
+        const tabs = document.querySelectorAll('.menu-tab');
+        const panels = document.querySelectorAll('.menu-panel');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const target = tab.dataset.tab;
+                tabs.forEach(t => t.classList.toggle('active', t === tab));
+                panels.forEach(p => p.classList.toggle('active', p.dataset.panel === target));
             });
+        });
 
-            useEffect(() => {
-                localStorage.setItem('cyere_cart', JSON.stringify(cart));
-            }, [cart]);
-
-            const addToCart = (product, size) => {
-                setCart([...cart, { ...product, size, cartId: Date.now() }]);
-            };
-
-            const removeFromCart = (cartId) => {
-                setCart(cart.filter(item => item.cartId !== cartId));
-            };
-
-            const cartTotal = cart.reduce((sum, item) => sum + item.price, 0);
-
-            return (
-                <CartContext.Provider value={{ cart, addToCart, removeFromCart, cartTotal }}>
-                    {children}
-                </CartContext.Provider>
-            );
-        };
-
-        const useCart = () => React.useContext(CartContext);
-
-        // --- Icons ---
-        const Icons = {
-            spotify: <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>,
-            apple: <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>,
-            tidal: <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12.012 3.992L8.008 7.996 4.004 3.992 0 7.996 4.004 12l4.004-4.004L12.012 12l-4.004 4.004L12.012 20l8.008-8.008L12.012 3.992zm4.004 4.004L20.02 12l-4.004 4.004L12.012 12l4.004-4.004z"/></svg>,
-            youtube: <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>,
-            tiktok: <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>,
-            instagram: <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>,
-            menu: <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>,
-            close: <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>,
-            cart: <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>,
-            play: <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>,
-            arrowDown: <svg className="w-6 h-6 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
-        };
-
-        const Nav = () => {
-            const [scrolled, setScrolled] = useState(false);
-            const [mobileOpen, setMobileOpen] = useState(false);
-            const { cart } = useCart();
-
-            useEffect(() => {
-                const handleScroll = () => setScrolled(window.scrollY > window.innerHeight * 0.9);
-                window.addEventListener('scroll', handleScroll);
-                return () => window.removeEventListener('scroll', handleScroll);
-            }, []);
-
-            return (
-                <>
-                    <nav className={`fixed top-0 w-full z-40 transition-all duration-300 border-b border-transparent ${scrolled ? 'bg-black/90 backdrop-blur-md border-white/10 py-4' : 'bg-transparent py-6'}`}>
-                        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-                            <a href="#home" className="text-2xl font-bold tracking-tighter text-white hover:text-red-600 transition-colors heading-font">
-                                CYERE
-                            </a>
-                            
-                            {/* Desktop Nav */}
-                            <div className="hidden md:flex items-center space-x-8">
-                                {siteConfig.navLinks.map((link) => (
-                                    <a key={link.label} href={link.href} className="text-xs tracking-widest text-white hover:text-red-600 transition-colors">
-                                        {link.label}
-                                    </a>
-                                ))}
-                                <a href="#merch" className="relative text-white hover:text-red-600 transition-colors">
-                                    {Icons.cart}
-                                    {cart.length > 0 && (
-                                        <span className="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
-                                            {cart.length}
-                                        </span>
-                                    )}
-                                </a>
-                            </div>
-
-                            {/* Mobile Toggle */}
-                            <button className="md:hidden text-white" onClick={() => setMobileOpen(!mobileOpen)}>
-                                {mobileOpen ? Icons.close : Icons.menu}
-                            </button>
-                        </div>
-                    </nav>
-
-                    {/* Mobile Menu */}
-                    {mobileOpen && (
-                        <div className="fixed inset-0 z-30 bg-black flex flex-col items-center justify-center space-y-8 md:hidden">
-                            {siteConfig.navLinks.map((link) => (
-                                <a 
-                                    key={link.label} 
-                                    href={link.href} 
-                                    onClick={() => setMobileOpen(false)}
-                                    className="text-2xl tracking-widest text-white hover:text-red-600 transition-colors heading-font"
-                                >
-                                    {link.label}
-                                </a>
-                            ))}
-                        </div>
-                    )}
-                </>
-            );
-        };
-
-        const Hero = () => {
-            return (
-                <section id="home" className="relative h-screen w-full overflow-hidden flex items-center justify-center">
-                    <div 
-                        className="absolute inset-0 bg-cover bg-center grayscale contrast-125 brightness-50"
-                        style={{ backgroundImage: `url(${siteConfig.hero.backgroundImage})` }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black" />
-                    
-                    <div className="relative z-10 text-center px-4">
-                        <h1 className="text-6xl md:text-9xl font-bold tracking-tighter text-white mb-4 heading-font mix-blend-difference">
-                            {siteConfig.hero.headline}
-                        </h1>
-                        <div className="h-1 w-24 bg-red-600 mx-auto mb-6" />
-                        <p className="text-sm md:text-base tracking-[0.3em] text-gray-300 mb-12 font-mono">
-                            {siteConfig.hero.subtext}
-                        </p>
-                        <a href="#music" className="inline-block border border-white text-white px-8 py-3 text-sm tracking-widest hover:bg-red-600 hover:border-red-600 transition-all duration-300">
-                            {siteConfig.hero.ctaText}
-                        </a>
-                    </div>
-
-                    <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 text-white">
-                        {Icons.arrowDown}
-                    </div>
-                </section>
-            );
-        };
-
-        const Music = () => {
-            return (
-                <section id="music" className="py-24 bg-black relative">
-                    <div className="max-w-7xl mx-auto px-6">
-                        <h2 className="text-5xl md:text-7xl font-bold text-red-600 mb-16 heading-font">{siteConfig.music.heading}</h2>
-                        
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                            {siteConfig.music.releases.map((release, idx) => (
-                                <div key={idx} className="group relative bg-neutral-900 border border-white/10 hover:border-red-600 transition-all duration-500 red-glow">
-                                    <div className="aspect-square overflow-hidden relative">
-                                        <img 
-                                            src={release.coverArt} 
-                                            alt={release.title} 
-                                            className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105"
-                                        />
-                                        <div className="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-all duration-500" />
-                                    </div>
-                                    <div className="p-6">
-                                        <div className="flex justify-between items-start mb-2">
-                                            <h3 className="text-2xl font-bold text-white heading-font">{release.title}</h3>
-                                            <span className="text-xs text-red-600 border border-red-600 px-2 py-1">{release.type}</span>
-                                        </div>
-                                        <p className="text-gray-400 text-sm mb-4 font-mono">{release.date} // {release.description}</p>
-                                        
-                                        <div className="flex flex-wrap gap-3">
-                                            {Object.entries(release.links).map(([platform, url]) => (
-                                                <a 
-                                                    key={platform} 
-                                                    href={url} 
-                                                    target="_blank" 
-                                                    rel="noreferrer"
-                                                    className="text-xs uppercase tracking-wider text-white border-b border-transparent hover:border-red-600 hover:text-red-600 transition-all"
-                                                >
-                                                    {platform}
-                                                </a>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-            );
-        };
-
-        const Videos = () => {
-            const [activeVideo, setActiveVideo] = useState(null);
-
-            return (
-                <section id="videos" className="py-24 bg-neutral-950 relative">
-                    <div className="max-w-7xl mx-auto px-6">
-                        <h2 className="text-5xl md:text-7xl font-bold text-white mb-16 heading-font">{siteConfig.videos.heading}</h2>
-                        
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            {siteConfig.videos.items.map((video, idx) => (
-                                <div key={idx} className="relative group cursor-pointer" onClick={() => setActiveVideo(video.youtubeId)}>
-                                    <div className="aspect-video bg-black overflow-hidden border border-white/10 group-hover:border-red-600 transition-all duration-300">
-                                        <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500 grayscale group-hover:grayscale-0" />
-                                        <div className="absolute inset-0 flex items-center justify-center">
-                                            <div className="w-16 h-16 rounded-full border-2 border-white flex items-center justify-center text-white group-hover:bg-red-600 group-hover:border-red-600 transition-all duration-300">
-                                                {Icons.play}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <h3 className="mt-4 text-xl text-white font-bold tracking-wide heading-font group-hover:text-red-600 transition-colors">{video.title}</h3>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Video Modal */}
-                    {activeVideo && (
-                        <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4" onClick={() => setActiveVideo(null)}>
-                            <div className="w-full max-w-5xl aspect-video bg-black relative">
-                                <iframe 
-                                    width="100%" 
-                                    height="100%" 
-                                    src={`https://www.youtube.com/embed/${activeVideo}?autoplay=1`} 
-                                    title="YouTube video player" 
-                                    frameBorder="0" 
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                    allowFullScreen
-                                ></iframe>
-                                <button className="absolute -top-10 right-0 text-white hover:text-red-600" onClick={() => setActiveVideo(null)}>
-                                    {Icons.close}
-                                </button>
-                            </div>
-                        </div>
-                    )}
-                </section>
-            );
-        };
-
-        const About = () => {
-            return (
-                <section id="about" className="py-24 bg-black relative overflow-hidden">
-                    <div className="max-w-7xl mx-auto px-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-                            <div className="relative">
-                                <div className="absolute -inset-4 border border-red-600/30 translate-x-4 translate-y-4" />
-                                <img 
-                                    src={siteConfig.about.image} 
-                                    alt="Avery Cyere" 
-                                    className="relative w-full grayscale contrast-125 hover:grayscale transition-all duration-700"
-                                />
-                            </div>
-                            <div>
-                                <h2 className="text-5xl md:text-7xl font-bold text-white mb-8 heading-font">{siteConfig.about.heading}</h2>
-                                <div className="space-y-6 mb-12">
-                                    {siteConfig.about.bio.map((paragraph, idx) => (
-                                        <p key={idx} className="text-gray-300 leading-relaxed font-mono text-sm md:text-base">
-                                            {paragraph}
-                                        </p>
-                                    ))}
-                                </div>
-                                <blockquote className="border-l-4 border-red-600 pl-6 py-2">
-                                    <p className="text-2xl md:text-3xl text-red-600 italic heading-font">
-                                        "{siteConfig.about.quote}"
-                                    </p>
-                                    <cite className="block mt-4 text-white not-italic tracking-widest text-sm">— {siteConfig.about.quoteAuthor}</cite>
-                                </blockquote>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            );
-        };
-
-        const Photos = () => {
-            const [lightbox, setLightbox] = useState(null);
-
-            return (
-                <section id="photos" className="py-24 bg-neutral-950">
-                    <div className="max-w-7xl mx-auto px-6">
-                        <h2 className="text-5xl md:text-7xl font-bold text-red-600 mb-16 heading-font">{siteConfig.photos.heading}</h2>
-                        
-                        <div className="columns-1 md:columns-2 lg:columns-3 gap-4 space-y-4">
-                            {siteConfig.photos.images.map((img, idx) => (
-                                <div 
-                                    key={idx} 
-                                    className="break-inside-avoid relative group cursor-pointer overflow-hidden border border-white/5 hover:border-red-600 transition-all duration-300"
-                                    onClick={() => setLightbox(img.src)}
-                                >
-                                    <img 
-                                        src={img.src} 
-                                        alt={img.alt} 
-                                        className="w-full grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
-                                    />
-                                    <div className="absolute inset-0 bg-red-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Lightbox */}
-                    {lightbox && (
-                        <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4" onClick={() => setLightbox(null)}>
-                            <img src={lightbox} className="max-w-full max-h-[90vh] object-contain border-2 border-red-600" alt="Full view" />
-                            <button className="absolute top-6 right-6 text-white hover:text-red-600" onClick={() => setLightbox(null)}>
-                                {Icons.close}
-                            </button>
-                        </div>
-                    )}
-                </section>
-            );
-        };
-
-        const Blog = () => {
-            const [expanded, setExpanded] = useState({});
-
-            const toggleExpand = (id) => {
-                setExpanded(prev => ({ ...prev, [id]: !prev[id] }));
-            };
-
-            return (
-                <section id="blog" className="py-24 bg-black">
-                    <div className="max-w-3xl mx-auto px-6">
-                        <h2 className="text-5xl md:text-7xl font-bold text-white mb-16 heading-font">{siteConfig.blog.heading}</h2>
-                        
-                        <div className="space-y-16">
-                            {siteConfig.blog.posts.map((post) => (
-                                <article key={post.id} className="border-b border-white/10 pb-12">
-                                    <div className="text-red-600 text-sm font-mono mb-2">{post.date}</div>
-                                    <h3 className="text-2xl font-bold text-white mb-4 heading-font hover:text-red-600 transition-colors cursor-pointer">
-                                        {post.title}
-                                    </h3>
-                                    
-                                    {post.type === 'quote' ? (
-                                        <blockquote className="text-xl italic text-gray-300 border-l-2 border-red-600 pl-4 my-4">
-                                            {post.content}
-                                        </blockquote>
-                                    ) : (
-                                        <p className={`text-gray-400 leading-relaxed font-mono ${expanded[post.id] ? '' : 'line-clamp-3'}`}>
-                                            {post.content}
-                                        </p>
-                                    )}
-                                    
-                                    <div className="mt-4 flex items-center justify-between">
-                                        <div className="flex gap-2">
-                                            {post.tags.map(tag => (
-                                                <span key={tag} className="text-xs text-red-600">#{tag}</span>
-                                            ))}
-                                        </div>
-                                        {post.type !== 'quote' && (
-                                            <button 
-                                                onClick={() => toggleExpand(post.id)}
-                                                className="text-xs uppercase tracking-widest text-white hover:text-red-600 transition-colors"
-                                            >
-                                                {expanded[post.id] ? 'Read Less' : 'Read More'}
-                                            </button>
-                                        )}
-                                    </div>
-                                </article>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-            );
-        };
-
-        const Merch = () => {
-            const { addToCart } = useCart();
-            const [selectedSizes, setSelectedSizes] = useState({});
-
-            const handleSizeSelect = (productId, size) => {
-                setSelectedSizes(prev => ({ ...prev, [productId]: size }));
-            };
-
-            return (
-                <section id="merch" className="py-24 bg-neutral-950">
-                    <div className="max-w-7xl mx-auto px-6">
-                        <h2 className="text-5xl md:text-7xl font-bold text-red-600 mb-16 heading-font">{siteConfig.merch.heading}</h2>
-                        
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                            {siteConfig.merch.products.map((product) => (
-                                <div key={product.id} className="group bg-black border border-white/10 hover:border-red-600 transition-all duration-300 red-glow">
-                                    <div className="aspect-[4/5] overflow-hidden relative">
-                                        <img 
-                                            src={product.image} 
-                                            alt={product.name} 
-                                            className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
-                                        />
-                                    </div>
-                                    <div className="p-6">
-                                        <div className="flex justify-between items-start mb-2">
-                                            <h3 className="text-xl font-bold text-white heading-font">{product.name}</h3>
-                                            <span className="text-xl text-red-600 font-mono">${product.price}</span>
-                                        </div>
-                                        <p className="text-gray-400 text-sm mb-6 font-mono">{product.description}</p>
-                                        
-                                        <div className="flex gap-2 mb-6">
-                                            {product.sizes.map(size => (
-                                                <button
-                                                    key={size}
-                                                    onClick={() => handleSizeSelect(product.id, size)}
-                                                    className={`w-10 h-10 border text-xs font-mono transition-all ${
-                                                        selectedSizes[product.id] === size 
-                                                        ? 'bg-red-600 border-red-600 text-white' 
-                                                        : 'border-white/30 text-white hover:border-red-600'
-                                                    }`}
-                                                >
-                                                    {size}
-                                                </button>
-                                            ))}
-                                        </div>
-                                        
-                                        <button 
-                                            onClick={() => {
-                                                if (selectedSizes[product.id]) {
-                                                    addToCart(product, selectedSizes[product.id]);
-                                                    alert(`Added ${product.name} (${selectedSizes[product.id]}) to cart`);
-                                                } else {
-                                                    alert("Please select a size");
-                                                }
-                                            }}
-                                            className="w-full bg-red-600 text-white py-3 text-sm tracking-widest hover:bg-white hover:text-black transition-all duration-300 font-bold"
-                                        >
-                                            ADD TO CART
-                                        </button>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-            );
-        };
-
-        const Connect = () => {
-            return (
-                <section id="connect" className="py-24 bg-black relative">
-                    <div className="max-w-4xl mx-auto px-6 text-center">
-                        <h2 className="text-5xl md:text-8xl font-bold text-red-600 mb-12 heading-font">{siteConfig.connect.heading}</h2>
-                        
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-20">
-                            {siteConfig.connect.links.map((link) => (
-                                <a 
-                                    key={link.platform}
-                                    href={link.url}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="flex flex-col items-center justify-center p-6 border border-white/20 hover:border-red-600 hover:bg-red-600/10 transition-all duration-300 group glitch-hover"
-                                >
-                                    <div className="text-white group-hover:text-red-600 mb-3 transition-colors">
-                                        {Icons[link.icon]}
-                                    </div>
-                                    <span className="text-xs tracking-widest text-white uppercase">{link.platform}</span>
-                                    {link.handle && <span className="text-[10px] text-gray-500 mt-1">{link.handle}</span>}
-                                </a>
-                            ))}
-                        </div>
-
-                        <div className="max-w-md mx-auto">
-                            <h3 className="text-xl text-white mb-6 tracking-widest">{siteConfig.connect.newsletter.heading}</h3>
-                            <form className="flex border border-white/30 focus-within:border-red-600 transition-colors" onSubmit={(e) => e.preventDefault()}>
-                                <input 
-                                    type="email" 
-                                    placeholder={siteConfig.connect.newsletter.placeholder}
-                                    className="flex-1 bg-transparent p-4 text-white placeholder-gray-600 outline-none font-mono text-sm"
-                                />
-                                <button className="px-6 text-white hover:text-red-600 transition-colors text-xl">
-                                    {siteConfig.connect.newsletter.buttonText}
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </section>
-            );
-        };
-
-        const Footer = () => {
-            return (
-                <footer className="py-12 bg-black border-t border-white/10">
-                    <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center">
-                        <p className="text-xs text-gray-500 font-mono mb-4 md:mb-0">{siteConfig.footer.copyright}</p>
-                        <p className="text-xs text-red-600 font-mono">{siteConfig.footer.credits}</p>
-                    </div>
-                </footer>
-            );
-        };
-
-        const App = () => {
-            return (
-                <CartProvider>
-                    <div className="min-h-screen bg-black text-white selection:bg-red-600 selection:text-white">
-                        <Nav />
-                        <Hero />
-                        <Music />
-                        <Videos />
-                        <About />
-                        <Photos />
-                        <Blog />
-                        <Merch />
-                        <Connect />
-                        <Footer />
-                    </div>
-                </CartProvider>
-            );
-        };
-
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+        // Close mobile menu after click
+        document.querySelectorAll('#navLinks a').forEach(a => {
+            a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('open'));
+        });
     </script>
 </body>
 </html>
