@@ -3,762 +3,1339 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AVERY CYERE</title>
+    <title>VAULT - Creator Workspace</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght=0,300;0,400;0,500;1,300;1,400&family=Inter:wght=300;400;500;600&family=Fira+Code&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        bg: {
+                            primary: '#FAF7F2',
+                            secondary: '#F0EBE5',
+                        },
+                        text: {
+                            primary: '#2D2D2D',
+                            secondary: '#6B6B6B',
+                            muted: '#A8A8A8',
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['"Fira Code"', 'monospace'],
+                    },
+                    boxShadow: {
+                        'ambient': '0 4px 24px rgba(45, 45, 45, 0.06)',
+                        'ambient-deep': '0 8px 32px rgba(45, 45, 45, 0.04)',
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
         body {
-            background-color: #000000;
-            color: #ffffff;
-            font-family: 'Space Mono', monospace;
-            overflow-x: hidden;
+            background-color: #FAF7F2;
+            color: #2D2D2D;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            user-select: none;
         }
-        h1, h2, h3, h4, h5, h6, .heading-font {
-            font-family: 'Oswald', sans-serif;
+
+        @keyframes drift {
+            0% { transform: translate(0px, 0px) scale(1); }
+            50% { transform: translate(40px, -60px) scale(1.15); }
+            100% { transform: translate(-20px, 30px) scale(0.9); }
         }
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
+
+        .animate-fluid-1 { animation: drift 22s ease-in-out infinite alternate; }
+        .animate-fluid-2 { animation: drift 16s ease-in-out infinite alternate-reverse; }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
         }
-        ::-webkit-scrollbar-track {
-            background: #000;
+
+        .editorial-input {
+            background: transparent;
+            border-top: 0;
+            border-left: 0;
+            border-right: 0;
+            border-bottom: 1px solid rgba(45, 45, 45, 0.1);
+            padding: 8px 0;
+            outline: none;
+            transition: all 0.3s;
         }
-        ::-webkit-scrollbar-thumb {
-            background: #cc0000;
+        .editorial-input:focus {
+            border-bottom-color: #2D2D2D;
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #ff0000;
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: rgba(45, 45, 45, 0.1); border-radius: 10px; }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #2D2D2D;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.3);
         }
         
-        /* Grain Texture Overlay */
-        .grain-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 50;
-            opacity: 0.05;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        .focused-navigation-tab {
+            outline: 2px solid #000000 !important;
+            outline-offset: -1px;
         }
 
-        /* Glitch Animation for VHS feel */
-        @keyframes glitch {
-            0% { transform: translate(0) }
-            20% { transform: translate(-2px, 2px) }
-            40% { transform: translate(-2px, -2px) }
-            60% { transform: translate(2px, 2px) }
-            80% { transform: translate(2px, -2px) }
-            100% { transform: translate(0) }
-        }
-        .glitch-hover:hover {
-            animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
-            color: #cc0000;
-        }
-
-        /* Red Glow */
-        .red-glow:hover {
-            box-shadow: 0 0 15px rgba(204, 0, 0, 0.6);
-            border-color: #cc0000;
-        }
-
-        /* Hide scrollbar for horizontal scroll areas but keep functionality */
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
+        .audio-ctrl-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
         }
     </style>
 </head>
-<body>
-    <div id="root"></div>
-    <div class="grain-overlay"></div>
+<body class="w-screen h-screen flex flex-col md:flex-row relative overflow-hidden">
 
-    <script type="text/babel">
-        const { useState, useEffect, useRef } = React;
+    <input type="file" id="system-file-uploader" class="hidden" onchange="processUploadedFile(event)" />
+    <input type="file" id="artwork-cover-uploader" class="hidden" accept="image/*" onchange="processArtworkCover(event)" />
 
-        // ==========================================
-        // CENTRALIZED CONTENT CONFIGURATION
-        // EDIT THIS OBJECT TO UPDATE THE ENTIRE SITE
-        // ==========================================
-        const siteConfig = {
-            artistName: "AVERY CYERE",
-            tagline: "UNDERGROUND // ATMOSPHERIC // RAW",
-            metaDescription: "Official website of Avery Cyere",
+    <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+        <div class="absolute top-[-10%] right-[-5%] w-[550px] h-[550px] rounded-full bg-gradient-to-br from-[#E8D5D5] via-[#C8B8D8] to-[#B8D4D4] opacity-25 blur-[110px] animate-fluid-1"></div>
+        <div class="absolute bottom-[-10%] left-[10%] w-[480px] h-[480px] rounded-full bg-gradient-to-r from-[#D4A5A5] to-[#B8C8D8] opacity-20 blur-[100px] animate-fluid-2"></div>
+    </div>
+
+    <div id="onboarding-modal" class="fixed inset-0 bg-black/40 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-[24px] shadow-ambient-deep p-6 sm:p-8 w-full max-w-xl border border-text-primary/5 relative max-h-[90vh] overflow-y-auto">
+            <span class="font-mono text-[9px] tracking-widest uppercase bg-[#C8B8D8]/20 text-[#2D2D2D] px-2.5 py-1 rounded-full font-semibold">Workspace Initiation</span>
+            <h2 class="font-serif text-3xl font-medium text-text-primary mt-3 mb-2">Welcome to VAULT</h2>
+            <p class="text-text-secondary text-xs sm:text-sm font-sans mb-6">Follow these essential setup steps to maximize your tracking performance across all devices:</p>
             
-            navLinks: [
-                { label: "HOME", href: "#home" },
-                { label: "MUSIC", href: "#music" },
-                { label: "VIDEOS", href: "#videos" },
-                { label: "ABOUT", href: "#about" },
-                { label: "PHOTOS", href: "#photos" },
-                { label: "BLOG", href: "#blog" },
-                { label: "MERCH", href: "#merch" },
-                { label: "CONNECT", href: "#connect" },
-            ],
-            
-            hero: {
-                backgroundImage: "https://picsum.photos/seed/cyere-hero/1920/1080",
-                headline: "AVERY CYERE",
-                subtext: "ENTER THE VOID",
-                ctaText: "ENTER",
-            },
-            
-            music: {
-                heading: "MUSIC",
-                releases: [
-                    {
-                        title: "XZEMA",
-                        type: "Single",
-                        date: "2024",
-                        coverArt: "https://picsum.photos/seed/xzema/800/800",
-                        description: "cyere type beat",
-                        links: {
-                            spotify: "https://open.spotify.com/artist/1LfkFyKfxAx4bo7NQOG2sk",
-                            apple: "https://music.apple.com/us/artist/avery-cyere/1524435633",
-                            tidal: "https://tidal.com/artist/20527797",
-                            deezer: "https://www.deezer.com/us/artist/101520712",
-                            amazon: "https://www.amazon.com/music/player/artists/B08DC76KNY/avery-cyere",
-                            youtubeMusic: "https://music.youtube.com/@cyeremusic",
-                            pandora: "https://www.pandora.com/artist/avery-cyere/ARPJgnhvzvPK9n6",
-                        }
-                    },
-                    {
-                        title: "NOCTURNE",
-                        type: "EP",
-                        date: "2023",
-                        coverArt: "https://picsum.photos/seed/nocturne/800/800",
-                        description: "Late night sessions.",
-                        links: {
-                            spotify: "#",
-                            apple: "#",
-                        }
-                    }
-                ]
-            },
-            
-            videos: {
-                heading: "VIDEOS",
-                items: [
-                    {
-                        title: "XZEMA VISUALIZER",
-                        youtubeId: "dQw4w9WgXcQ",
-                        thumbnail: "https://picsum.photos/seed/visualizer/1280/720",
-                    },
-                    {
-                        title: "BEHIND THE SCENES",
-                        youtubeId: "dQw4w9WgXcQ",
-                        thumbnail: "https://picsum.photos/seed/bts/1280/720",
-                    }
-                ]
-            },
-            
-            about: {
-                heading: "ABOUT",
-                image: "https://picsum.photos/seed/portrait/800/1000",
-                bio: [
-                    "The sound of concrete and neon. I make music for the night crawlers and the early morning thinkers.",
-                    "No labels. No rules. Just raw emotion translated into frequency.",
-                    "Based in the underground. Inspired by the silence between city noises."
-                ],
-                quote: "WE ARE THE MUSIC MAKERS, AND WE ARE THE DREAMERS OF DREAMS.",
-                quoteAuthor: "AVERY CYERE",
-            },
-            
-            photos: {
-                heading: "VISUALS",
-                images: [
-                    { src: "https://picsum.photos/seed/vhs/600/800", alt: "VHS Glitch" },
-                    { src: "https://picsum.photos/seed/garage/600/600", alt: "Parking Garage" },
-                    { src: "https://picsum.photos/seed/halftone/600/700", alt: "Halftone" },
-                    { src: "https://picsum.photos/seed/fabric/600/900", alt: "Fabric Spine" },
-                    { src: "https://picsum.photos/seed/portrait2/600/800", alt: "Portrait" },
-                    { src: "https://picsum.photos/seed/cover/600/600", alt: "XZEMA Cover" },
-                ]
-            },
-            
-            blog: {
-                heading: "JOURNAL",
-                posts: [
-                    {
-                        id: 1,
-                        date: "2024-05-18",
-                        title: "STUDIO LOCK IN",
-                        type: "text",
-                        content: "Locked in the studio for 48 hours. No sleep, just frequencies. New material coming sooner than you think. The walls are vibrating.",
-                        tags: ["studio", "new music", "raw"],
-                    },
-                    {
-                        id: 2,
-                        date: "2024-04-12",
-                        title: "INSPIRATION",
-                        type: "quote",
-                        content: "Sometimes the darkest places produce the brightest sounds.",
-                        tags: ["thoughts"],
-                    }
-                ]
-            },
-            
-            merch: {
-                heading: "MERCH",
-                products: [
-                    {
-                        id: 1,
-                        name: "XZEMA LONGSLEEVE",
-                        price: 45,
-                        image: "https://picsum.photos/seed/longsleeve/800/1000",
-                        description: "Heavy cotton. Red spine print.",
-                        sizes: ["S", "M", "L", "XL"],
-                        inStock: true,
-                    },
-                    {
-                        id: 2,
-                        name: "VHS GLITCH TEE",
-                        price: 35,
-                        image: "https://picsum.photos/seed/tee/800/1000",
-                        description: "Limited run. Distressed fit.",
-                        sizes: ["M", "L", "XL"],
-                        inStock: true,
-                    }
-                ]
-            },
-            
-            connect: {
-                heading: "CONNECT",
-                links: [
-                    { platform: "Spotify", url: "https://open.spotify.com/artist/1LfkFyKfxAx4bo7NQOG2sk", icon: "spotify" },
-                    { platform: "Apple Music", url: "https://music.apple.com/us/artist/avery-cyere/1524435633", icon: "apple" },
-                    { platform: "Tidal", url: "https://tidal.com/artist/20527797", icon: "tidal" },
-                    { platform: "YouTube", url: "https://www.youtube.com/@cyeremusic", icon: "youtube" },
-                    { platform: "TikTok", url: "https://www.tiktok.com/@cyeremusic", icon: "tiktok" },
-                    { platform: "Instagram", url: "https://www.instagram.com/bellumthelabel", icon: "instagram", handle: "@bellumthelabel" },
-                ],
-                newsletter: {
-                    heading: "STAY UPDATED",
-                    placeholder: "ENTER EMAIL...",
-                    buttonText: "\u2192",
-                }
-            },
-            
-            footer: {
-                copyright: "\u00a9 2024 AVERY CYERE. ALL RIGHTS RESERVED.",
-                credits: "DESIGN BY CYERE",
-            }
+            <div class="space-y-4">
+                <div class="flex gap-4 items-start bg-bg-secondary/50 p-4 rounded-2xl border border-text-primary/5">
+                    <div class="bg-text-primary text-white font-mono text-xs w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5 font-bold shadow-sm">1</div>
+                    <div>
+                        <h4 class="font-sans text-xs font-semibold uppercase tracking-wider text-text-primary flex items-center gap-1.5">
+                            <i data-lucide="folder-heart" class="w-3.5 h-3.5 text-amber-600"></i> Create Your Master Vault Folder
+                        </h4>
+                        <p class="text-text-secondary text-xs mt-1 leading-relaxed">Before uploading anything, **create one dedicated folder** on your local device storage (e.g., <code class="font-mono bg-white px-1 py-0.5 rounded border text-red-500">/MyVaultAssets</code>) to pull your raw files from. Keeping files centralized in a single master directory protects your file pathways from breaking and avoids unorganized asset tracking.</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-4 items-start p-4 bg-[#B8D4D4]/10 rounded-2xl border border-text-primary/5">
+                    <div class="bg-text-secondary text-white font-mono text-xs w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5 font-bold">2</div>
+                    <div>
+                        <h4 class="font-sans text-xs font-semibold uppercase tracking-wider text-text-primary flex items-center gap-1.5">
+                            <i data-lucide="image" class="w-3.5 h-3.5 text-indigo-600"></i> Linking Artwork & Audio Modules
+                        </h4>
+                        <p class="text-text-secondary text-xs mt-1 leading-relaxed">For audio extensions (`.wav`, `.mp3`) or graphic canvases (`.png`, `.jpg`), you can manually bind direct asset locations, cover arts, and external file targets inside the **Meta Registry** text fields to perfectly link them on-site.</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-4 items-start p-4">
+                    <div class="bg-text-secondary text-white font-mono text-xs w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5 font-bold">3</div>
+                    <div>
+                        <h4 class="font-sans text-xs font-semibold uppercase tracking-wider text-text-primary flex items-center gap-1.5">
+                            <i data-lucide="refresh-cw" class="w-3.5 h-3.5 text-emerald-600"></i> Instant State Refresh
+                        </h4>
+                        <p class="text-text-secondary text-xs mt-1 leading-relaxed">The tracking system runs real-time DOM pipelines. If a file grid change does not update immediately due to browser caching, hit the dedicated **Refresh Asset Pipeline** button located directly at the folder tree baseline.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between mt-8 pt-4 border-t border-text-primary/5">
+                <button onclick="toggleOnboarding(false)" class="bg-text-primary text-white text-xs font-sans tracking-widest uppercase font-medium py-3.5 px-8 rounded-xl shadow-ambient hover:bg-text-primary/90 transition-all duration-200 w-full text-center">
+                    Enter Workspace
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <header class="w-full bg-white border-b border-text-primary/10 px-6 py-4 flex items-center justify-between md:hidden relative z-30 shadow-sm">
+        <div>
+            <h1 class="font-serif text-2xl font-bold tracking-tight text-text-primary uppercase">VAULT</h1>
+            <p class="text-text-muted font-mono text-[8px] uppercase tracking-widest">Offline Project Viewer</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <div id="device-pill" class="text-[10px] font-mono uppercase bg-bg-secondary px-2.5 py-1 rounded-full border border-text-primary/5 text-text-secondary">Detecting Engine...</div>
+            <button onclick="toggleMobileSidebar()" class="p-2 text-text-primary bg-bg-secondary rounded-xl hover:bg-text-primary/5">
+                <i data-lucide="menu" class="w-5 h-5"></i>
+            </button>
+        </div>
+    </header>
+
+    <aside id="app-sidebar" class="fixed inset-y-0 left-0 z-40 transform -translate-x-full md:translate-x-0 md:relative w-[280px] h-full bg-white border-r border-text-primary/10 flex flex-col justify-between p-8 transition-transform duration-300 ease-in-out shadow-lg md:shadow-none">
+        <div>
+            <div class="flex items-center justify-between mb-10">
+                <div>
+                    <div class="flex items-center justify-between">
+                        <h1 class="font-serif text-[38px] font-bold tracking-tight leading-none text-text-primary uppercase">VAULT</h1>
+                        <button onclick="toggleOnboarding(true)" class="p-1.5 bg-bg-secondary rounded-lg text-text-secondary hover:text-text-primary transition-colors" title="View Instructions">
+                            <i data-lucide="help-circle" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    <p class="text-text-secondary text-[11px] font-sans mt-2 italic leading-tight opacity-90">made by a producer for creatives and organizers alike</p>
+                    <p class="text-text-muted font-mono text-[9px] uppercase tracking-widest mt-1 opacity-75">Offline Project Viewer</p>
+                </div>
+                <button onclick="toggleMobileSidebar()" class="md:hidden p-2 text-text-muted hover:text-text-primary">
+                    <i data-lucide="chevron-left" class="w-6 h-6"></i>
+                </button>
+            </div>
+
+            <nav class="space-y-3">
+                <button id="nav-explorer" onclick="switchView('explorer')" class="w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 font-sans text-sm bg-[#B8D4D4]/20 text-text-primary font-medium focused-navigation-tab">
+                    <i data-lucide="folder" class="w-4 h-4 stroke-[1.5]"></i>
+                    Project Explorer
+                </button>
+                <button id="nav-contacts" onclick="switchView('contacts')" class="w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 font-sans text-sm text-text-secondary hover:bg-[#C8B8D8]/12">
+                    <i data-lucide="users" class="w-4 h-4 stroke-[1.5]"></i>
+                    Contacts & Clients
+                </button>
+            </nav>
+        </div>
+
+        <div class="flex flex-col gap-2 px-4 py-2 font-mono text-[11px] text-text-secondary border-t border-text-primary/5 pt-4">
+            <div class="flex items-center gap-2">
+                <i data-lucide="hard-drive" class="w-3.5 h-3.5 text-text-muted"></i>
+                <span class="text-text-muted">Device Capacity Matrix:</span>
+            </div>
+            <div id="device-storage-display" class="text-text-primary font-medium leading-relaxed">Querying Storage Allocations...</div>
+        </div>
+    </aside>
+
+    <div id="sidebar-dimmer" onclick="toggleMobileSidebar()" class="fixed inset-0 bg-black/20 z-30 hidden backdrop-blur-xs transition-opacity"></div>
+
+    <main class="flex-1 flex flex-col lg:flex-row overflow-hidden relative z-10 w-full h-full">
+        
+        <div id="view-explorer" class="flex-1 flex flex-col sm:flex-row overflow-hidden w-full h-full">
+            <div class="w-full sm:w-64 border-b sm:border-b-0 sm:border-r border-text-primary/5 bg-[#F0EBE5]/40 p-6 flex flex-row sm:flex-col justify-between items-center sm:items-stretch overflow-x-auto sm:overflow-x-visible overflow-y-hidden sm:overflow-y-auto gap-4 shrink-0">
+                <div class="w-full">
+                    <h4 class="font-mono text-[10px] tracking-widest uppercase text-text-muted mb-2 sm:mb-4 hidden sm:block">Workspace Directories</h4>
+                    <div id="folder-tree" class="flex sm:flex-col gap-1.5 overflow-x-auto sm:overflow-x-visible w-full pb-2 sm:pb-0"></div>
+                </div>
+                
+                <div class="sm:pt-4 sm:border-t border-text-primary/5 shrink-0 w-auto sm:w-full flex sm:flex-col gap-2">
+                    <button onclick="forcePipelineRefresh()" class="w-full bg-white border border-text-primary/10 hover:bg-bg-secondary text-text-primary text-[10px] font-mono tracking-wider uppercase font-medium py-2 px-3 rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5" title="Force Render Re-evaluation">
+                        <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                        <span>Refresh Hub</span>
+                    </button>
+                    <button onclick="triggerNativeUploader()" class="bg-text-primary hover:bg-text-primary/90 text-white text-xs font-sans tracking-wider uppercase font-medium py-2.5 sm:py-3 px-4 rounded-xl shadow-ambient transition-all duration-200 flex items-center justify-center gap-2 whitespace-nowrap w-full">
+                        <i data-lucide="upload-cloud" class="w-4 h-4"></i>
+                        <span>Upload Asset</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex-1 flex flex-col overflow-hidden h-full">
+                <div class="flex-1 p-6 sm:p-12 overflow-y-auto flex flex-col">
+                    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
+                        <div>
+                            <div class="flex items-center gap-3">
+                                <h3 class="font-serif text-3xl font-light text-text-primary">Storage Hub <span id="storage-hub-counter" class="text-xs font-mono text-text-muted ml-2 bg-bg-secondary px-2 py-0.5 rounded-md border border-text-primary/5">0 items</span></h3>
+                                <div class="relative inline-block lg:hidden text-left z-20">
+                                    <button onclick="toggleWorkspaceMenu()" class="p-1.5 rounded-lg border border-text-primary/10 bg-white shadow-xs hover:bg-bg-secondary text-text-secondary">
+                                        <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
+                                    </button>
+                                    <div id="workspace-dropdown" class="hidden absolute left-0 mt-2 w-48 bg-white border border-text-primary/10 rounded-xl shadow-ambient-deep p-2 space-y-1">
+                                        <span class="block px-3 py-1 font-mono text-[9px] uppercase text-text-muted">Sort Workspace</span>
+                                        <button onclick="changeMenuSort('dateAdded')" class="w-full text-left px-3 py-1.5 text-xs rounded-lg hover:bg-bg-secondary">Date Added</button>
+                                        <button onclick="changeMenuSort('name')" class="w-full text-left px-3 py-1.5 text-xs rounded-lg hover:bg-bg-secondary">Name (A-Z)</button>
+                                        <button onclick="changeMenuSort('lastViewed')" class="w-full text-left px-3 py-1.5 text-xs rounded-lg hover:bg-bg-secondary">Last Viewed</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <p id="directory-subtitle" class="font-mono text-[11px] text-text-muted mt-1">Direct local filesystem instance</p>
+                        </div>
+
+                        <div class="hidden lg:flex flex-wrap items-center gap-4">
+                            <div class="relative w-48 sm:w-56">
+                                <i data-lucide="search" class="w-3.5 h-3.5 text-text-muted absolute left-3 top-1/2 -translate-y-1/2"></i>
+                                <input type="text" id="asset-tag-search-field" oninput="handleAssetTagSearchInput(this.value)" placeholder="Search files by tag..." class="w-full bg-white border border-text-primary/10 rounded-lg pl-9 pr-3 py-1.5 text-xs font-sans text-text-primary focus:outline-none focus:border-text-primary/30 shadow-sm" />
+                            </div>
+
+                            <div class="flex items-center gap-2">
+                                <span class="font-mono text-[10px] uppercase text-text-muted tracking-wider">Sort:</span>
+                                <select id="file-sort-select" onchange="handleSortChange(this.value)" class="bg-white border border-text-primary/10 rounded-lg px-3 py-1.5 font-sans text-xs text-text-primary focus:outline-none focus:border-text-primary cursor-pointer shadow-sm">
+                                    <option value="dateAdded">Date Added</option>
+                                    <option value="name">Name (A-Z)</option>
+                                    <option value="lastViewed">Last Viewed</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="block lg:hidden relative w-full">
+                            <i data-lucide="search" class="w-4 h-4 text-text-muted absolute left-3 top-1/2 -translate-y-1/2"></i>
+                            <input type="text" id="asset-tag-search-mobile" oninput="handleAssetTagSearchInput(this.value)" placeholder="Search files by tag..." class="w-full bg-white border border-text-primary/10 rounded-xl pl-10 pr-4 py-2.5 text-sm font-sans text-text-primary focus:outline-none shadow-sm" />
+                        </div>
+                    </div>
+
+                    <div id="file-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6 flex-1"></div>
+                </div>
+
+                <footer class="w-full py-4 text-center border-t border-text-primary/5 font-mono text-[10px] tracking-widest text-text-muted bg-white uppercase shrink-0">
+                    made by XZEMA
+                </footer>
+            </div>
+        </div>
+
+        <div id="view-contacts" class="flex-1 flex flex-col overflow-hidden w-full hidden h-full">
+            <div class="flex-1 p-6 sm:p-12 overflow-y-auto w-full">
+                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-8 sm:mb-12">
+                    <div>
+                        <h2 class="font-serif text-3xl sm:text-[38px] font-bold uppercase text-text-primary tracking-tight leading-none">Contacts & Clients</h2>
+                        <p class="text-text-secondary text-xs sm:text-sm font-serif mt-2 italic opacity-90">Manage artists, representatives, and tracking systems</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2 sm:gap-3">
+                        <button onclick="toggleTagManagerModal(true)" class="bg-white border border-text-primary/10 text-text-primary text-[11px] sm:text-xs font-sans tracking-wider uppercase font-medium px-4 py-2.5 sm:px-5 sm:py-3.5 rounded-full hover:bg-bg-secondary shadow-sm transition-all duration-200">
+                            <span class="flex items-center gap-2"><i data-lucide="tag" class="w-3.5 h-3.5"></i> Custom Groups</span>
+                        </button>
+                        <button onclick="toggleModal(true)" class="bg-gradient-to-r from-[#D4A5A5] to-[#B8C8D8] text-white text-[11px] sm:text-xs font-sans tracking-wider uppercase font-medium px-5 py-2.5 sm:px-6 sm:py-3.5 rounded-full hover:scale-[1.02] shadow-ambient transition-all duration-300">
+                            <span class="flex items-center gap-2"><i data-lucide="plus" class="w-3.5 h-3.5"></i> Add Record</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+                    <div id="tab-container" class="bg-bg-secondary p-1 rounded-full flex gap-1 self-start overflow-x-auto max-w-full">
+                        <button id="tab-artist" onclick="setContactFilter('artist')" class="bg-white text-text-primary font-semibold shadow-sm px-4 sm:px-6 py-1.5 rounded-full text-[11px] sm:text-xs font-sans uppercase tracking-wider transition-all whitespace-nowrap">Artists</button>
+                        <button id="tab-client" onclick="setContactFilter('client')" class="text-text-secondary hover:text-text-primary px-4 sm:px-6 py-1.5 rounded-full text-[11px] sm:text-xs font-sans uppercase tracking-wider transition-all whitespace-nowrap">Clients</button>
+                        <button id="tab-all" onclick="setContactFilter('all')" class="text-text-secondary hover:text-text-primary px-4 sm:px-6 py-1.5 rounded-full text-[11px] sm:text-xs font-sans uppercase tracking-wider transition-all whitespace-nowrap">All</button>
+                    </div>
+
+                    <div class="relative w-full sm:w-64">
+                        <i data-lucide="search" class="w-3.5 h-3.5 text-text-muted absolute left-3 top-1/2 -translate-y-1/2"></i>
+                        <input type="text" id="tag-search-field" oninput="handleTagSearchInput(this.value)" placeholder="Filter by Creative Tag..." class="w-full bg-white border border-text-primary/10 rounded-full pl-9 pr-4 py-1.5 text-xs font-sans text-text-primary focus:outline-none focus:border-text-primary/40 shadow-sm" />
+                    </div>
+                </div>
+
+                <div id="contacts-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </div>
+
+            <footer class="w-full py-4 text-center border-t border-text-primary/5 font-mono text-[10px] tracking-widest text-text-muted bg-white uppercase shrink-0">
+                made by XZEMA
+            </footer>
+        </div>
+    </main>
+
+    <div id="preview-panel" class="fixed lg:relative inset-y-0 right-0 w-full sm:w-[350px] lg:w-[320px] h-full bg-white border-l border-text-primary/10 flex flex-col z-50 shadow-ambient hidden">
+        <div class="p-6 border-b border-text-primary/5 flex justify-between items-center bg-white">
+            <span class="font-mono text-[10px] tracking-widest uppercase text-text-muted">Meta Registry</span>
+            <button onclick="closePreview()" class="text-text-muted hover:text-text-primary p-1 bg-bg-secondary rounded-lg transition-colors">
+                <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+        </div>
+
+        <div class="p-5 flex-1 flex flex-col justify-between overflow-y-auto">
+            <div class="space-y-5">
+                <div id="preview-art-frame" class="w-full aspect-square bg-bg-secondary rounded-2xl flex flex-col items-center justify-center relative overflow-hidden group border border-text-primary/5 shadow-inner">
+                    <img id="preview-image-node" src="" class="absolute inset-0 w-full h-full object-cover hidden" />
+                    <div id="preview-icon-wrapper" class="flex flex-col items-center justify-center text-text-muted space-y-2">
+                        <i id="preview-icon-audio" data-lucide="music" class="w-12 h-12 stroke-[1.1] hidden"></i>
+                        <i id="preview-icon-generic" data-lucide="file-text" class="w-12 h-12 stroke-[1.1] hidden"></i>
+                    </div>
+                    <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 cursor-pointer" onclick="triggerArtworkCoverUploader()">
+                        <span class="text-white text-[11px] font-sans uppercase font-medium tracking-wider flex items-center gap-1.5"><i data-lucide="image" class="w-3.5 h-3.5"></i> Update Cover</span>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 id="preview-title" class="font-serif text-xl font-medium text-text-primary tracking-tight truncate">Filename.wav</h4>
+                    <span id="preview-extension" class="font-mono text-[11px] text-text-muted uppercase tracking-wider block mt-1">File Extension: .wav</span>
+                </div>
+
+                <div id="meta-links-modifier-channel" class="space-y-3 bg-bg-secondary/40 p-3 rounded-xl border border-text-primary/5">
+                    <span class="font-mono text-[9px] tracking-widest uppercase text-text-muted block">Direct Media Asset Links</span>
+                    
+                    <div class="flex flex-col gap-1">
+                        <label class="font-sans text-[10px] text-text-secondary">Image Source / Cover Art Url:</label>
+                        <input id="input-asset-image-link" type="text" class="bg-white border border-text-primary/10 rounded px-2 py-1 text-xs focus:outline-none font-mono" placeholder="e.g. /MyVaultAssets/cover.jpg" onchange="applyManualMediaSourceLinks()" />
+                    </div>
+
+                    <div id="audio-source-link-field-wrapper" class="flex flex-col gap-1 hidden">
+                        <label class="font-sans text-[10px] text-text-secondary">Audio Wave Track Url:</label>
+                        <input id="input-asset-audio-link" type="text" class="bg-white border border-text-primary/10 rounded px-2 py-1 text-xs focus:outline-none font-mono" placeholder="e.g. /MyVaultAssets/beat.mp3" onchange="applyManualMediaSourceLinks()" />
+                    </div>
+                </div>
+
+                <div class="space-y-2 border-t border-text-primary/5 pt-4">
+                    <label class="font-mono text-[10px] tracking-widest uppercase text-text-muted block">Asset Metadata Tags</label>
+                    <div class="flex gap-2">
+                        <input id="input-asset-tag-string" type="text" class="editorial-input flex-1 text-xs text-text-primary py-1" placeholder="Add tag (e.g. Mastered)" onkeydown="if(event.key === 'Enter') executeAssetTagBinding()" />
+                        <button onclick="executeAssetTagBinding()" class="bg-text-primary text-white font-mono text-[10px] uppercase tracking-wider px-3 py-1 rounded-md">Bind</button>
+                    </div>
+                    <div id="asset-preview-tags-list" class="flex flex-col gap-3 pt-2"></div>
+                </div>
+
+                <div id="audio-player-container" class="bg-bg-secondary/40 p-4 rounded-xl border border-text-primary/5 space-y-4 hidden">
+                    <audio id="native-audio-node" class="hidden" preload="auto"></audio>
+                    
+                    <div class="space-y-1">
+                        <div class="w-full flex items-center relative h-6 group">
+                            <input type="range" id="audio-scrub-slider" min="0" max="100" value="0" step="0.1" oninput="handleAudioScrubberInput(this.value)" class="w-full accent-text-primary h-1 bg-text-primary/10 rounded-lg appearance-none cursor-pointer z-10" />
+                        </div>
+                        <div class="flex justify-between font-mono text-[9px] text-text-muted px-0.5">
+                            <span id="audio-time-current">0:00</span>
+                            <span id="audio-time-duration">0:00</span>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-3 pt-1">
+                        <!-- SEPARATED PLAY / PAUSE BUTTONS -->
+                        <div class="flex items-center gap-2">
+                            <button id="audio-play-btn" onclick="playAudioNode()" class="audio-ctrl-btn flex-1 py-2.5 px-3 rounded-lg bg-text-primary border border-text-primary text-white shadow-ambient flex items-center justify-center gap-1.5 text-xs font-mono uppercase font-semibold transition-colors focus:outline-none hover:bg-text-primary/90">
+                                <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i>
+                                <span>Play</span>
+                            </button>
+                            <button id="audio-pause-btn" onclick="pauseAudioNode()" disabled class="audio-ctrl-btn flex-1 py-2.5 px-3 rounded-lg bg-amber-600 border border-amber-600 text-white shadow-ambient flex items-center justify-center gap-1.5 text-xs font-mono uppercase font-semibold transition-colors focus:outline-none hover:bg-amber-700">
+                                <i data-lucide="pause" class="w-3.5 h-3.5 fill-current"></i>
+                                <span>Pause</span>
+                            </button>
+                        </div>
+                        
+                        <div class="flex items-center gap-2 w-full">
+                            <i data-lucide="volume-2" class="w-3.5 h-3.5 text-text-secondary"></i>
+                            <input type="range" id="audio-volume-slider" min="0" max="100" value="80" oninput="handleVolumeAdjustment(this.value)" class="w-full accent-text-primary h-1 bg-text-primary/10 rounded-lg appearance-none cursor-pointer" />
+                            <span id="audio-volume-percentage" class="font-mono text-[9px] text-text-secondary w-7 text-right">80%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-4 pt-4">
+                <div class="pt-4 border-t border-text-primary/5 space-y-2.5 font-mono text-[11px]">
+                    <div class="flex justify-between">
+                        <span class="text-text-muted">Storage Size</span>
+                        <span id="preview-size" class="text-text-secondary">0.00 MB</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-text-muted">Node Status</span>
+                        <span class="text-emerald-600 font-medium">LocalStorage Synced</span>
+                    </div>
+                </div>
+
+                <button onclick="executeCurrentFileDeletion()" class="w-full bg-red-50 text-red-600 hover:bg-red-100 text-[10px] font-mono tracking-widest uppercase font-semibold py-2.5 rounded-lg transition-colors duration-200 flex items-center justify-center gap-1.5">
+                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                    <span>Delete Asset</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="contact-modal" class="fixed inset-0 bg-bg-primary/95 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-[24px] shadow-ambient-deep p-8 w-full max-w-md border border-text-primary/5 mx-4 max-h-[90vh] overflow-y-auto">
+            <h3 class="font-serif text-2xl text-text-primary mb-6">Create System Profile</h3>
+            <form id="add-contact-form" onsubmit="handleContactSubmit(event)" class="space-y-5">
+                <div class="flex flex-col">
+                    <label class="font-mono text-[10px] tracking-widest uppercase text-text-muted mb-1">Full Name</label>
+                    <input id="contact-name" type="text" required class="editorial-input text-xs text-text-primary" placeholder="Artist or organization title" />
+                </div>
+                <div class="flex flex-col">
+                    <label class="font-mono text-[10px] tracking-widest uppercase text-text-muted mb-1">Profile Classification</label>
+                    <select id="contact-type" class="bg-white border border-text-primary/10 rounded px-2 py-2 text-xs focus:outline-none w-full mt-1 font-sans cursor-pointer">
+                        <option value="artist">Artist Branch Profile</option>
+                        <option value="client">Client / Clearance Nod</option>
+                    </select>
+                </div>
+                <div class="flex flex-col">
+                    <label class="font-mono text-[10px] tracking-widest uppercase text-text-muted mb-1">Email Address</label>
+                    <input id="contact-email" type="email" class="editorial-input text-xs text-text-primary" placeholder="name@domain.com" />
+                </div>
+                <div class="flex flex-col">
+                    <label class="font-mono text-[10px] tracking-widest uppercase text-text-muted mb-1">Phone Line Reference</label>
+                    <input id="contact-phone" type="text" class="editorial-input text-xs text-text-primary" placeholder="+1 (555) 000-0000" />
+                </div>
+                <div class="flex flex-col">
+                    <label class="font-mono text-[10px] tracking-widest uppercase text-text-muted mb-1">System Tags</label>
+                    <input id="contact-tags" type="text" class="editorial-input text-xs text-text-primary" placeholder="Separated by commas (e.g. Beats, Vocalist)" />
+                </div>
+                <div class="flex flex-col">
+                    <label class="font-mono text-[10px] tracking-widest uppercase text-text-muted mb-1">Internal Reference Notes</label>
+                    <textarea id="contact-notes" rows="3" class="bg-transparent border border-text-primary/10 rounded-xl p-3 text-xs text-text-primary outline-none mt-2 focus:border-text-primary/30" placeholder="Operational details..."></textarea>
+                </div>
+                <div class="flex items-center justify-end gap-3 pt-2">
+                    <button type="button" onclick="toggleModal(false)" class="text-text-secondary text-xs uppercase tracking-wider font-mono px-4 py-2">Cancel</button>
+                    <button type="submit" class="bg-text-primary text-white text-xs uppercase tracking-wider font-mono px-6 py-2.5 rounded-xl shadow-xs">Save Profile</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="tag-manager-modal" class="fixed inset-0 bg-bg-primary/95 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-[24px] shadow-ambient-deep p-8 w-full max-w-md border border-text-primary/5 mx-4">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="font-serif text-2xl text-text-primary">Manage Custom Groups</h3>
+                <button onclick="toggleTagManagerModal(false)" class="text-text-muted hover:text-text-primary"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <div class="space-y-4">
+                <div class="flex gap-2">
+                    <input id="new-global-group-name" type="text" placeholder="e.g., Content Format" class="editorial-input flex-1 text-xs" />
+                    <button onclick="createNewGlobalTagGroup()" class="bg-text-primary text-white text-xs font-mono px-4 py-2 rounded-lg">Create Group</button>
+                </div>
+                <div id="global-groups-container" class="space-y-3 max-h-[40vh] overflow-y-auto pt-2"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let vaultState = {
+            activeView: 'explorer',         
+            activeDirectory: 'all',         
+            workspaceSort: 'dateAdded',     
+            contactFilter: 'artist',        
+            selectedAssetId: null,
+            searchQuery: '',
+            assets: [],
+            contacts: [],
+            customTagGroups: [
+                { id: 'g-1', name: 'Project Phase', tags: ['Draft', 'In-Review', 'Approved'] },
+                { id: 'g-2', name: 'Content Format', tags: ['Short-Form', 'Long-Form', 'Template'] }
+            ]
         };
 
-        // ==========================================
-        // COMPONENTS
-        // ==========================================
+        function initLocalStorageData() {
+            const savedAssets = localStorage.getItem('vault_assets_db');
+            const savedContacts = localStorage.getItem('vault_contacts_db');
+            const savedGroups = localStorage.getItem('vault_tag_groups');
 
-        const CartContext = React.createContext();
+            if (savedAssets) {
+                vaultState.assets = JSON.parse(savedAssets);
+            } else {
+                vaultState.assets = [
+                    { id: 'ast-1', name: 'prague_groove_140bpm.wav', size: 42107520, ext: '.wav', dir: 'beats', tags: ['🔗 Link → creative/master-renders'], customTags: [{group: 'Project Phase', value: 'In-Review'}], dateAdded: Date.now() - 86400000, lastViewed: Date.now(), imageSource: '', audioSource: '' },
+                    { id: 'ast-2', name: 'synth_pluck_staccato.mp3', size: 3145728, ext: '.mp3', dir: 'samples', tags: ['🔗 Link → engineering/core-audio'], customTags: [], dateAdded: Date.now() - 172800000, lastViewed: Date.now(), imageSource: '', audioSource: '' },
+                    { id: 'ast-3', name: 'album_art_final.png', size: 8388608, ext: '.png', dir: 'artwork', tags: [], customTags: [{group: 'Content Format', value: 'Short-Form'}], dateAdded: Date.now(), lastViewed: Date.now(), imageSource: '', audioSource: '' }
+                ];
+                saveStateToStorage();
+            }
 
-        const CartProvider = ({ children }) => {
-            const [cart, setCart] = useState(() => {
-                try {
-                    return JSON.parse(localStorage.getItem('cyere_cart')) || [];
-                } catch { return []; }
+            if (savedContacts) {
+                vaultState.contacts = JSON.parse(savedContacts);
+            } else {
+                vaultState.contacts = [
+                    { id: 'c-1', name: 'Xzema Production Hub', type: 'artist', email: 'xzema@vault.io', phone: '+31 20 555 4321', tags: 'Core, Beats', notes: 'Master studio workspace profile link.' },
+                    { id: 'c-2', name: 'Amsterdam Creative Reps', type: 'client', email: 'clearance@amsreps.nl', phone: '+31 20 777 9811', tags: 'Distribution', notes: 'European licensing and clearance nodes.' }
+                ];
+                saveStateToStorage();
+            }
+            if (savedGroups) vaultState.customTagGroups = JSON.parse(savedGroups);
+        }
+
+        function saveStateToStorage() {
+            localStorage.setItem('vault_assets_db', JSON.stringify(vaultState.assets));
+            localStorage.setItem('vault_contacts_db', JSON.stringify(vaultState.contacts));
+            localStorage.setItem('vault_tag_groups', JSON.stringify(vaultState.customTagGroups));
+            updateDeviceCapacityMatrix();
+        }
+
+        const directoryMapping = {
+            'all': { label: 'All Project Repositories', sub: 'Global structural pipeline matrix' },
+            'beats': { label: 'Production Beats Repository', sub: './workspace/directory/beats' },
+            'samples': { label: 'Audio Sample Modules', sub: './workspace/directory/samples' },
+            'artwork': { label: 'Graphic Design Canvases', sub: './workspace/directory/artwork' },
+            'documents': { label: 'Legal & Text Elements', sub: './workspace/directory/documents' }
+        };
+
+        function renderFolderTree() {
+            const treeContainer = document.getElementById('folder-tree');
+            if(!treeContainer) return;
+            treeContainer.innerHTML = '';
+
+            Object.keys(directoryMapping).forEach(key => {
+                const isActive = vaultState.activeDirectory === key;
+                const btn = document.createElement('button');
+                btn.onclick = () => handleDirectoryReroute(key);
+                btn.className = `flex items-center gap-3 px-4 py-2 rounded-xl text-xs font-mono uppercase tracking-wider transition-all whitespace-nowrap border ${
+                    isActive 
+                        ? 'bg-text-primary text-white border-text-primary shadow-sm' 
+                        : 'bg-white text-text-secondary border-text-primary/10 hover:bg-bg-secondary'
+                }`;
+                
+                let iconName = key === 'all' ? 'layers' : (key === 'artwork' ? 'image' : (key === 'documents' ? 'file-text' : 'music'));
+                btn.innerHTML = `<i data-lucide="${iconName}" class="w-3.5 h-3.5"></i> <span>${key}</span>`;
+                treeContainer.appendChild(btn);
+            });
+            lucide.createIcons();
+        }
+
+        function handleDirectoryReroute(directoryKey) {
+            vaultState.activeDirectory = directoryKey;
+            const contextMeta = directoryMapping[directoryKey];
+            document.getElementById('directory-subtitle').innerText = contextMeta.sub;
+            
+            renderFolderTree();
+            renderFileGrid();
+            closePreview();
+        }
+
+        // FIXED GRID ITEMS TO ALBUM COVERS IN REAL TIME
+        function renderFileGrid() {
+            const grid = document.getElementById('file-grid');
+            if(!grid) return;
+            grid.innerHTML = '';
+
+            let filtered = vaultState.assets.filter(asset => {
+                if (vaultState.activeDirectory !== 'all' && asset.dir !== vaultState.activeDirectory) return false;
+                if (vaultState.searchQuery) {
+                    const query = vaultState.searchQuery.toLowerCase();
+                    const matchStandardTag = asset.tags.some(t => t.toLowerCase().includes(query));
+                    const matchCustomTag = asset.customTags.some(ct => ct.value.toLowerCase().includes(query) || ct.group.toLowerCase().includes(query));
+                    return matchStandardTag || matchCustomTag || asset.name.toLowerCase().includes(query);
+                }
+                return true;
             });
 
-            useEffect(() => {
-                localStorage.setItem('cyere_cart', JSON.stringify(cart));
-            }, [cart]);
+            filtered.sort((a, b) => {
+                if (vaultState.workspaceSort === 'name') return a.name.localeCompare(b.name);
+                if (vaultState.workspaceSort === 'lastViewed') return b.lastViewed - a.lastViewed;
+                return b.dateAdded - a.dateAdded;
+            });
 
-            const addToCart = (product, size) => {
-                setCart([...cart, { ...product, size, cartId: Date.now() }]);
+            document.getElementById('storage-hub-counter').innerText = `${filtered.length} item${filtered.length === 1 ? '' : 's'}`;
+
+            if (filtered.length === 0) {
+                grid.className = "flex flex-col items-center justify-center py-12 text-center col-span-full text-text-muted";
+                grid.innerHTML = `<i data-lucide="folder-open" class="w-12 h-12 stroke-[1] mb-2"></i><p class="font-serif italic text-sm">No localized workspace nodes matching filters</p>`;
+                lucide.createIcons();
+                return;
+            }
+
+            grid.className = "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6 flex-1";
+            filtered.forEach(asset => {
+                const isSelected = vaultState.selectedAssetId === asset.id;
+                const card = document.createElement('div');
+                card.onclick = () => openPreview(asset.id);
+                
+                // FORCE ALBUM COVER RATIO
+                card.className = `glass-card rounded-2xl p-3 flex flex-col justify-between cursor-pointer border transition-all duration-300 group hover:shadow-ambient-deep aspect-[1/1.25] overflow-hidden ${
+                    isSelected ? 'ring-2 ring-text-primary border-transparent' : 'border-text-primary/5'
+                }`;
+
+                let thumbnailContent = '';
+                if (asset.imageSource) {
+                    thumbnailContent = `<img src="${asset.imageSource}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />`;
+                } else {
+                    let iconType = asset.ext === '.png' || asset.ext === '.jpg' ? 'image' : (asset.ext === '.wav' || asset.ext === '.mp3' ? 'music' : 'file-text');
+                    thumbnailContent = `<i data-lucide="${iconType}" class="w-8 h-8 stroke-[1.1] text-text-muted group-hover:scale-105 transition-transform"></i>`;
+                }
+                
+                card.innerHTML = `
+                    <div class="aspect-square w-full bg-bg-secondary rounded-xl flex flex-col items-center justify-center mb-2 relative overflow-hidden border border-text-primary/5 shadow-inner">
+                        ${thumbnailContent}
+                    </div>
+                    <div class="min-w-0">
+                        <h5 class="font-sans text-[11px] font-semibold text-text-primary truncate" title="${asset.name}">${asset.name}</h5>
+                        <p class="font-mono text-[8px] text-text-muted uppercase tracking-wider mt-0.5">${asset.ext} • ${(asset.size / (1024*1024)).toFixed(2)} MB</p>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        // FORCE RERENDER AND CLEAR RESIDUAL TIMERS
+        function forcePipelineRefresh() {
+            localStorage.setItem('vault_assets_db', JSON.stringify(vaultState.assets));
+            localStorage.setItem('vault_contacts_db', JSON.stringify(vaultState.contacts));
+            
+            initLocalStorageData();
+            renderFolderTree();
+            renderFileGrid();
+            updateDeviceCapacityMatrix();
+            if (vaultState.selectedAssetId) {
+                openPreview(vaultState.selectedAssetId);
+            } else {
+                closePreview();
+            }
+        }
+
+        function triggerNativeUploader() {
+            document.getElementById('system-file-uploader').click();
+        }
+
+        // FIX: AUDIO FILES ARE NOW READ AS DATA URLS SO THEY CAN BE PLAYED IMMEDIATELY
+        function processUploadedFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            let fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+            let autoAssignedDirectory = 'documents';
+            if (['.wav', '.mp3'].includes(fileExtension)) autoAssignedDirectory = 'beats';
+            if (['.png', '.jpg', '.jpeg'].includes(fileExtension)) autoAssignedDirectory = 'artwork';
+
+            const newAsset = {
+                id: 'ast-' + Date.now(),
+                name: file.name,
+                size: file.size || 5242880,
+                ext: fileExtension,
+                dir: autoAssignedDirectory,
+                tags: [],
+                customTags: [],
+                dateAdded: Date.now(),
+                lastViewed: Date.now(),
+                imageSource: '',
+                audioSource: ''
             };
 
-            const removeFromCart = (cartId) => {
-                setCart(cart.filter(item => item.cartId !== cartId));
+            const isImage = ['.png', '.jpg', '.jpeg'].includes(fileExtension);
+            const isAudio = ['.wav', '.mp3'].includes(fileExtension);
+
+            const finalize = () => {
+                vaultState.assets.unshift(newAsset);
+                saveStateToStorage();
+                handleDirectoryReroute(autoAssignedDirectory);
+                // Reset uploader so the same file can be re-uploaded
+                event.target.value = '';
             };
 
-            const cartTotal = cart.reduce((sum, item) => sum + item.price, 0);
+            if (isImage || isAudio) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    if (isImage) newAsset.imageSource = e.target.result;
+                    if (isAudio) newAsset.audioSource = e.target.result;
+                    finalize();
+                };
+                reader.onerror = function() {
+                    console.warn('FileReader failed for', file.name);
+                    finalize();
+                };
+                reader.readAsDataURL(file);
+            } else {
+                finalize();
+            }
+        }
 
-            return (
-                <CartContext.Provider value={{ cart, addToCart, removeFromCart, cartTotal }}>
-                    {children}
-                </CartContext.Provider>
-            );
-        };
+        let currentAudio = document.getElementById('native-audio-node');
+        let audioProgressInterval;
 
-        const useCart = () => React.useContext(CartContext);
+        function openPreview(assetId) {
+            vaultState.selectedAssetId = assetId;
+            const asset = vaultState.assets.find(a => a.id === assetId);
+            if (!asset) return;
 
-        // --- Icons ---
-        const Icons = {
-            spotify: <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>,
-            apple: <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>,
-            tidal: <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12.012 3.992L8.008 7.996 4.004 3.992 0 7.996 4.004 12l4.004-4.004L12.012 12l-4.004 4.004L12.012 20l8.008-8.008L12.012 3.992zm4.004 4.004L20.02 12l-4.004 4.004L12.012 12l4.004-4.004z"/></svg>,
-            youtube: <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>,
-            tiktok: <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>,
-            instagram: <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>,
-            menu: <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>,
-            close: <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>,
-            cart: <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>,
-            play: <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>,
-            arrowDown: <svg className="w-6 h-6 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
-        };
+            asset.lastViewed = Date.now();
+            localStorage.setItem('vault_assets_db', JSON.stringify(vaultState.assets));
 
-        const Nav = () => {
-            const [scrolled, setScrolled] = useState(false);
-            const [mobileOpen, setMobileOpen] = useState(false);
-            const { cart } = useCart();
+            const panel = document.getElementById('preview-panel');
+            panel.classList.remove('hidden');
 
-            useEffect(() => {
-                const handleScroll = () => setScrolled(window.scrollY > window.innerHeight * 0.9);
-                window.addEventListener('scroll', handleScroll);
-                return () => window.removeEventListener('scroll', handleScroll);
-            }, []);
+            document.getElementById('preview-title').innerText = asset.name;
+            document.getElementById('preview-extension').innerText = `File Extension: ${asset.ext}`;
+            document.getElementById('preview-size').innerText = `${(asset.size / (1024*1024)).toFixed(2)} MB`;
 
-            return (
-                <>
-                    <nav className={`fixed top-0 w-full z-40 transition-all duration-300 border-b border-transparent ${scrolled ? 'bg-black/90 backdrop-blur-md border-white/10 py-4' : 'bg-transparent py-6'}`}>
-                        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-                            <a href="#home" className="text-2xl font-bold tracking-tighter text-white hover:text-red-600 transition-colors heading-font">
-                                CYERE
-                            </a>
-                            
-                            {/* Desktop Nav */}
-                            <div className="hidden md:flex items-center space-x-8">
-                                {siteConfig.navLinks.map((link) => (
-                                    <a key={link.label} href={link.href} className="text-xs tracking-widest text-white hover:text-red-600 transition-colors">
-                                        {link.label}
-                                    </a>
-                                ))}
-                                <a href="#merch" className="relative text-white hover:text-red-600 transition-colors">
-                                    {Icons.cart}
-                                    {cart.length > 0 && (
-                                        <span className="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
-                                            {cart.length}
-                                        </span>
-                                    )}
-                                </a>
-                            </div>
+            const imgNode = document.getElementById('preview-image-node');
+            const audIcon = document.getElementById('preview-icon-audio');
+            const genIcon = document.getElementById('preview-icon-generic');
+            
+            imgNode.classList.add('hidden');
+            audIcon.classList.add('hidden');
+            genIcon.classList.add('hidden');
 
-                            {/* Mobile Toggle */}
-                            <button className="md:hidden text-white" onClick={() => setMobileOpen(!mobileOpen)}>
-                                {mobileOpen ? Icons.close : Icons.menu}
-                            </button>
+            // IMAGE VIEW METADATA ENGINE FIXED
+            if (asset.imageSource) {
+                imgNode.src = asset.imageSource;
+                imgNode.classList.remove('hidden');
+            } else if (['.wav', '.mp3'].includes(asset.ext)) {
+                audIcon.classList.remove('hidden');
+            } else {
+                genIcon.classList.remove('hidden');
+            }
+
+            document.getElementById('input-asset-image-link').value = asset.imageSource || '';
+            const audioWrapper = document.getElementById('audio-source-link-field-wrapper');
+            const audioPlayerContainer = document.getElementById('audio-player-container');
+            
+            if (['.wav', '.mp3'].includes(asset.ext)) {
+                audioWrapper.classList.remove('hidden');
+                audioPlayerContainer.classList.remove('hidden');
+                // Don't dump huge data-url into the input — only show short user-entered paths
+                const audioInput = document.getElementById('input-asset-audio-link');
+                audioInput.value = (asset.audioSource && !asset.audioSource.startsWith('data:')) ? asset.audioSource : '';
+                initAudioEngine(asset.audioSource);
+            } else {
+                audioWrapper.classList.add('hidden');
+                audioPlayerContainer.classList.add('hidden');
+                resetAudioEngine();
+            }
+
+            renderAssetTags(asset);
+        }
+
+        function closePreview() {
+            resetAudioEngine();
+            vaultState.selectedAssetId = null;
+            document.getElementById('preview-panel').classList.add('hidden');
+            renderFileGrid();
+        }
+
+        function renderAssetTags(asset) {
+            const list = document.getElementById('asset-preview-tags-list');
+            if(!list) return;
+            list.innerHTML = '';
+
+            const selectContainer = document.createElement('div');
+            selectContainer.className = "w-full mb-2";
+            selectContainer.innerHTML = `
+                <span class="font-sans text-[10px] text-text-secondary block mb-1">Option 1: Cross-Folder Relational Link</span>
+                <select onchange="executeRelationalTagMapping(this.value)" class="bg-white border border-text-primary/10 rounded px-2 py-1 text-xs focus:outline-none w-full cursor-pointer">
+                    <option value="" disabled selected>Target alternate branch directory...</option>
+                    <option value="beats/master-stems">beats/master-stems</option>
+                    <option value="samples/one-shots">samples/one-shots</option>
+                    <option value="artwork/marketing-kits">artwork/marketing-kits</option>
+                    <option value="documents/copyright-notices">documents/copyright-notices</option>
+                </select>
+            `;
+            list.appendChild(selectContainer);
+
+            const groupedControl = document.createElement('div');
+            groupedControl.className = "w-full border-t border-text-primary/5 pt-2 mt-1 space-y-2";
+            
+            let groupOptionsHTML = vaultState.customTagGroups.map(g => `<option value="${g.name}">${g.name}</option>`).join('');
+            
+            groupedControl.innerHTML = `
+                <span class="font-sans text-[10px] text-text-secondary block">Option 2: Assign Custom Group Tag</span>
+                <div class="flex gap-1.5">
+                    <select id="select-custom-group" class="bg-white border border-text-primary/10 rounded px-2 py-1 text-xs focus:outline-none flex-1 cursor-pointer">
+                        ${groupOptionsHTML || '<option disabled>No groups active</option>'}
+                    </select>
+                    <select id="select-custom-value" class="bg-white border border-text-primary/10 rounded px-2 py-1 text-xs focus:outline-none flex-1 cursor-pointer">
+                    </select>
+                    <button onclick="executeCustomGroupTagBinding()" class="bg-text-primary text-white text-xs px-3 py-1 rounded">Apply</button>
+                </div>
+            `;
+            list.appendChild(groupedControl);
+
+            const groupSelect = document.getElementById('select-custom-group');
+            const valueSelect = document.getElementById('select-custom-value');
+            
+            function syncSubTagDropdown() {
+                if(!groupSelect || !groupSelect.value) return;
+                const activeGroup = vaultState.customTagGroups.find(g => g.name === groupSelect.value);
+                valueSelect.innerHTML = activeGroup ? activeGroup.tags.map(t => `<option value="${t}">${t}</option>`).join('') : '';
+            }
+            if(groupSelect) {
+                groupSelect.onchange = syncSubTagDropdown;
+                syncSubTagDropdown();
+            }
+
+            const visualContainer = document.createElement('div');
+            visualContainer.className = "flex flex-wrap gap-1 w-full pt-3 border-t border-text-primary/5 mt-2";
+            
+            asset.tags.forEach(t => {
+                visualContainer.innerHTML += `<span class="bg-[#B8D4D4]/30 text-text-primary font-mono text-[9px] px-2 py-0.5 rounded border border-[#B8D4D4] flex items-center gap-1">${t} <i data-lucide="x" class="w-2.5 h-2.5 cursor-pointer hover:text-red-500" onclick="removeAssetTag('standard', '${t}')"></i></span>`;
+            });
+
+            asset.customTags.forEach(ct => {
+                visualContainer.innerHTML += `<span class="bg-[#C8B8D8]/30 text-text-primary font-mono text-[9px] px-2 py-0.5 rounded border border-[#C8B8D8] flex items-center gap-1">📂 [${ct.group}] ${ct.value} <i data-lucide="x" class="w-2.5 h-2.5 cursor-pointer hover:text-red-500" onclick="removeAssetTag('custom', '${ct.group}:${ct.value}')"></i></span>`;
+            });
+
+            list.appendChild(visualContainer);
+            lucide.createIcons();
+        }
+
+        function executeRelationalTagMapping(value) {
+            if (!value || !vaultState.selectedAssetId) return;
+            const asset = vaultState.assets.find(a => a.id === vaultState.selectedAssetId);
+            const tagString = `🔗 Link → ${value}`;
+            if (asset && !asset.tags.includes(tagString)) {
+                asset.tags.push(tagString);
+                saveStateToStorage();
+                renderAssetTags(asset);
+                renderFileGrid();
+            }
+        }
+
+        function executeCustomGroupTagBinding() {
+            if (!vaultState.selectedAssetId) return;
+            const group = document.getElementById('select-custom-group').value;
+            const val = document.getElementById('select-custom-value').value;
+            if(!group || !val) return;
+
+            const asset = vaultState.assets.find(a => a.id === vaultState.selectedAssetId);
+            if (asset) {
+                const exists = asset.customTags.some(ct => ct.group === group && ct.value === val);
+                if(!exists) {
+                    asset.customTags.push({ group: group, value: val });
+                    saveStateToStorage();
+                    renderAssetTags(asset);
+                    renderFileGrid();
+                }
+            }
+        }
+
+        function executeAssetTagBinding() {
+            const input = document.getElementById('input-asset-tag-string');
+            const val = input.value.trim();
+            if (!val || !vaultState.selectedAssetId) return;
+
+            const asset = vaultState.assets.find(a => a.id === vaultState.selectedAssetId);
+            if (asset && !asset.tags.includes(val)) {
+                asset.tags.push(val);
+                saveStateToStorage();
+                input.value = '';
+                renderAssetTags(asset);
+                renderFileGrid();
+            }
+        }
+
+        function removeAssetTag(type, identifier) {
+            const asset = vaultState.assets.find(a => a.id === vaultState.selectedAssetId);
+            if (!asset) return;
+
+            if (type === 'standard') {
+                asset.tags = asset.tags.filter(t => t !== identifier);
+            } else {
+                const [gName, gVal] = identifier.split(':');
+                asset.customTags = asset.customTags.filter(ct => !(ct.group === gName && ct.value === gVal));
+            }
+            saveStateToStorage();
+            renderAssetTags(asset);
+            renderFileGrid();
+        }
+
+        function applyManualMediaSourceLinks() {
+            const asset = vaultState.assets.find(a => a.id === vaultState.selectedAssetId);
+            if (!asset) return;
+
+            asset.imageSource = document.getElementById('input-asset-image-link').value.trim();
+            if (['.wav', '.mp3'].includes(asset.ext)) {
+                const userTyped = document.getElementById('input-asset-audio-link').value.trim();
+                // Only overwrite the audio source if the user actually typed something.
+                // This prevents an accidental wipe of an embedded data-url track loaded on upload.
+                if (userTyped) asset.audioSource = userTyped;
+            }
+            saveStateToStorage();
+            openPreview(asset.id);
+        }
+
+        function triggerArtworkCoverUploader() {
+            document.getElementById('artwork-cover-uploader').click();
+        }
+
+        function processArtworkCover(event) {
+            const file = event.target.files[0];
+            if (!file || !vaultState.selectedAssetId) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const asset = vaultState.assets.find(a => a.id === vaultState.selectedAssetId);
+                if(asset) {
+                    asset.imageSource = e.target.result;
+                    saveStateToStorage();
+                    openPreview(asset.id);
+                }
+            }
+            reader.readAsDataURL(file);
+            event.target.value = '';
+        }
+
+        function executeCurrentFileDeletion() {
+            if(!vaultState.selectedAssetId) return;
+            vaultState.assets = vaultState.assets.filter(a => a.id !== vaultState.selectedAssetId);
+            saveStateToStorage();
+            closePreview();
+        }
+
+        // ============== AUDIO ENGINE ==============
+
+        function initAudioEngine(src) {
+            resetAudioEngine();
+            if (!src || !currentAudio) {
+                setAudioControlsState(false, false);
+                return;
+            }
+            currentAudio.src = src;
+            // Once metadata loads, surface the duration up front
+            currentAudio.onloadedmetadata = () => {
+                if (currentAudio.duration && isFinite(currentAudio.duration)) {
+                    document.getElementById('audio-time-duration').innerText = formatAudioTimeMetric(currentAudio.duration);
+                }
+            };
+            // When playback ends, reset the buttons back to the play state
+            currentAudio.onended = () => {
+                clearInterval(audioProgressInterval);
+                setAudioControlsState(true, false);
+                document.getElementById('audio-scrub-slider').value = 0;
+                document.getElementById('audio-time-current').innerText = '0:00';
+            };
+            setAudioControlsState(true, false);
+        }
+
+        function resetAudioEngine() {
+            if (currentAudio) {
+                try { currentAudio.pause(); } catch(e){}
+                currentAudio.removeAttribute('src');
+                currentAudio.load && currentAudio.load();
+                currentAudio.onloadedmetadata = null;
+                currentAudio.onended = null;
+            }
+            clearInterval(audioProgressInterval);
+
+            setAudioControlsState(false, false);
+
+            const scrub = document.getElementById('audio-scrub-slider');
+            const cur = document.getElementById('audio-time-current');
+            const dur = document.getElementById('audio-time-duration');
+            if(scrub) scrub.value = 0;
+            if(cur) cur.innerText = '0:00';
+            if(dur) dur.innerText = '0:00';
+        }
+
+        // Centralized state management for the two split buttons
+        // hasSrc: whether a source is loaded   isPlaying: whether playback is currently active
+        function setAudioControlsState(hasSrc, isPlaying) {
+            const playBtn = document.getElementById('audio-play-btn');
+            const pauseBtn = document.getElementById('audio-pause-btn');
+            if (!playBtn || !pauseBtn) return;
+
+            if (!hasSrc) {
+                playBtn.disabled = true;
+                pauseBtn.disabled = true;
+            } else {
+                playBtn.disabled = isPlaying;        // Disable Play while playing
+                pauseBtn.disabled = !isPlaying;      // Disable Pause when not playing
+            }
+        }
+
+        // FIXED: SEPARATED PLAY BUTTON
+        function playAudioNode() {
+            if (!currentAudio || !currentAudio.src) return;
+            currentAudio.play().then(() => {
+                clearInterval(audioProgressInterval);
+                audioProgressInterval = setInterval(updateAudioPlaybackProgressUI, 250);
+                setAudioControlsState(true, true);
+            }).catch(e => {
+                console.log("Playback failed. Provide a valid audio source.", e);
+                setAudioControlsState(!!currentAudio.src, false);
+            });
+        }
+
+        // FIXED: SEPARATED PAUSE BUTTON
+        function pauseAudioNode() {
+            if (!currentAudio) return;
+            currentAudio.pause();
+            clearInterval(audioProgressInterval);
+            setAudioControlsState(!!currentAudio.src, false);
+        }
+
+        function updateAudioPlaybackProgressUI() {
+            if(!currentAudio || !currentAudio.duration || !isFinite(currentAudio.duration)) return;
+            const current = currentAudio.currentTime;
+            const duration = currentAudio.duration;
+            
+            document.getElementById('audio-scrub-slider').value = (current / duration) * 100;
+            document.getElementById('audio-time-current').innerText = formatAudioTimeMetric(current);
+            document.getElementById('audio-time-duration').innerText = formatAudioTimeMetric(duration);
+        }
+
+        function handleAudioScrubberInput(value) {
+            if(!currentAudio || !currentAudio.duration || !isFinite(currentAudio.duration)) return;
+            currentAudio.currentTime = (value / 100) * currentAudio.duration;
+            document.getElementById('audio-time-current').innerText = formatAudioTimeMetric(currentAudio.currentTime);
+        }
+
+        function handleVolumeAdjustment(value) {
+            if(currentAudio) currentAudio.volume = value / 100;
+            document.getElementById('audio-volume-percentage').innerText = `${value}%`;
+        }
+
+        function formatAudioTimeMetric(secs) {
+            if (!isFinite(secs)) return '0:00';
+            const m = Math.floor(secs / 60);
+            const s = Math.floor(secs % 60);
+            return `${m}:${s < 10 ? '0' : ''}${s}`;
+        }
+
+        // ============== TAG GROUP MANAGER ==============
+
+        function toggleTagManagerModal(show) {
+            const modal = document.getElementById('tag-manager-modal');
+            modal.className = show ? modal.className.replace('hidden', 'flex') : modal.className.replace('flex', 'hidden');
+            if (show) renderGlobalGroupsList();
+        }
+
+        function renderGlobalGroupsList() {
+            const container = document.getElementById('global-groups-container');
+            if(!container) return;
+            container.innerHTML = '';
+
+            vaultState.customTagGroups.forEach(group => {
+                const item = document.createElement('div');
+                item.className = "bg-bg-secondary/60 p-3 rounded-xl border border-text-primary/5 space-y-1.5";
+                item.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <span class="font-sans text-xs font-semibold text-text-primary">${group.name}</span>
+                        <button onclick="deleteGlobalTagGroup('${group.id}')" class="text-red-500 text-[10px] font-mono uppercase">Delete</button>
+                    </div>
+                    <div class="flex gap-1">
+                        <input id="input-new-tag-${group.id}" type="text" placeholder="Add custom tag options..." class="bg-white border border-text-primary/10 rounded px-2 py-0.5 text-[11px] flex-1 outline-none focus:border-text-primary/30" />
+                        <button onclick="addTagToGlobalGroup('${group.id}')" class="bg-text-primary text-white text-[10px] px-2 rounded">+</button>
+                    </div>
+                    <div class="flex flex-wrap gap-1 pt-1">
+                        ${group.tags.map(t => `<span class="bg-white px-1.5 py-0.5 text-[10px] font-mono rounded text-text-secondary border border-text-primary/5">${t}</span>`).join('')}
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function createNewGlobalTagGroup() {
+            const input = document.getElementById('new-global-group-name');
+            const name = input.value.trim();
+            if(!name) return;
+
+            vaultState.customTagGroups.push({
+                id: 'g-' + Date.now(),
+                name: name,
+                tags: []
+            });
+            saveStateToStorage();
+            input.value = '';
+            renderGlobalGroupsList();
+        }
+
+        function addTagToGlobalGroup(groupId) {
+            const input = document.getElementById(`input-new-tag-${groupId}`);
+            const tagVal = input.value.trim();
+            if(!tagVal) return;
+
+            const group = vaultState.customTagGroups.find(g => g.id === groupId);
+            if(group && !group.tags.includes(tagVal)) {
+                group.tags.push(tagVal);
+                saveStateToStorage();
+                renderGlobalGroupsList();
+            }
+        }
+
+        function deleteGlobalTagGroup(groupId) {
+            vaultState.customTagGroups = vaultState.customTagGroups.filter(g => g.id !== groupId);
+            saveStateToStorage();
+            renderGlobalGroupsList();
+        }
+
+        function switchView(target) {
+            vaultState.activeView = target;
+            
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('bg-[#B8D4D4]/20', 'text-text-primary', 'font-medium', 'focused-navigation-tab'));
+            const activeNavBtn = document.getElementById(`nav-${target}`);
+            if(activeNavBtn) activeNavBtn.classList.add('bg-[#B8D4D4]/20', 'text-text-primary', 'font-medium', 'focused-navigation-tab');
+
+            if (target === 'explorer') {
+                document.getElementById('view-explorer').classList.remove('hidden');
+                document.getElementById('view-contacts').classList.add('hidden');
+                renderFileGrid();
+            } else {
+                document.getElementById('view-explorer').classList.add('hidden');
+                document.getElementById('view-contacts').classList.remove('hidden');
+                closePreview();
+                renderContactsGrid();
+            }
+            toggleMobileSidebar(false);
+        }
+
+        function setContactFilter(type) {
+            vaultState.contactFilter = type;
+            document.querySelectorAll('#tab-container button').forEach(b => b.className = "text-text-secondary hover:text-text-primary px-4 sm:px-6 py-1.5 rounded-full text-[11px] sm:text-xs font-sans uppercase tracking-wider transition-all whitespace-nowrap");
+            document.getElementById(`tab-${type}`).className = "bg-white text-text-primary font-semibold shadow-sm px-4 sm:px-6 py-1.5 rounded-full text-[11px] sm:text-xs font-sans uppercase tracking-wider transition-all whitespace-nowrap";
+            renderContactsGrid();
+        }
+
+        function renderContactsGrid() {
+            const grid = document.getElementById('contacts-grid');
+            if(!grid) return;
+            grid.innerHTML = '';
+
+            let filtered = vaultState.contacts.filter(c => {
+                if(vaultState.contactFilter !== 'all' && c.type !== vaultState.contactFilter) return false;
+                if(vaultState.searchQuery) {
+                    return c.tags.toLowerCase().includes(vaultState.searchQuery.toLowerCase()) || c.name.toLowerCase().includes(vaultState.searchQuery.toLowerCase());
+                }
+                return true;
+            });
+
+            filtered.forEach(c => {
+                const card = document.createElement('div');
+                card.className = "bg-white border border-text-primary/10 rounded-2xl p-5 shadow-sm space-y-3 relative";
+                
+                // DISPLAYS PHONE & EMAIL
+                card.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="font-mono text-[9px] uppercase px-2 py-0.5 rounded-full ${c.type === 'artist' ? 'bg-[#C8B8D8]/20 text-[#2D2D2D]' : 'bg-[#B8D4D4]/30 text-text-primary'}">${c.type}</span>
+                            <h4 class="font-serif text-xl font-medium text-text-primary mt-1.5">${c.name}</h4>
                         </div>
-                    </nav>
-
-                    {/* Mobile Menu */}
-                    {mobileOpen && (
-                        <div className="fixed inset-0 z-30 bg-black flex flex-col items-center justify-center space-y-8 md:hidden">
-                            {siteConfig.navLinks.map((link) => (
-                                <a 
-                                    key={link.label} 
-                                    href={link.href} 
-                                    onClick={() => setMobileOpen(false)}
-                                    className="text-2xl tracking-widest text-white hover:text-red-600 transition-colors heading-font"
-                                >
-                                    {link.label}
-                                </a>
-                            ))}
-                        </div>
-                    )}
-                </>
-            );
-        };
-
-        const Hero = () => {
-            return (
-                <section id="home" className="relative h-screen w-full overflow-hidden flex items-center justify-center">
-                    <div 
-                        className="absolute inset-0 bg-cover bg-center grayscale contrast-125 brightness-50"
-                        style={{ backgroundImage: `url(${siteConfig.hero.backgroundImage})` }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black" />
+                        <button onclick="deleteContactRecord('${c.id}')" class="text-text-muted hover:text-red-500 transition-colors"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </div>
                     
-                    <div className="relative z-10 text-center px-4">
-                        <h1 className="text-6xl md:text-9xl font-bold tracking-tighter text-white mb-4 heading-font mix-blend-difference">
-                            {siteConfig.hero.headline}
-                        </h1>
-                        <div className="h-1 w-24 bg-red-600 mx-auto mb-6" />
-                        <p className="text-sm md:text-base tracking-[0.3em] text-gray-300 mb-12 font-mono">
-                            {siteConfig.hero.subtext}
-                        </p>
-                        <a href="#music" className="inline-block border border-white text-white px-8 py-3 text-sm tracking-widest hover:bg-red-600 hover:border-red-600 transition-all duration-300">
-                            {siteConfig.hero.ctaText}
-                        </a>
+                    <div class="space-y-1 font-mono text-[11px] text-text-secondary bg-bg-primary/40 p-2.5 rounded-xl border border-text-primary/5">
+                        <div class="flex items-center gap-1.5 truncate"><i data-lucide="mail" class="w-3 h-3 text-text-muted"></i> <span>${c.email || 'No email filed'}</span></div>
+                        <div class="flex items-center gap-1.5"><i data-lucide="phone" class="w-3 h-3 text-text-muted"></i> <span>${c.phone || 'No phone filed'}</span></div>
                     </div>
 
-                    <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 text-white">
-                        {Icons.arrowDown}
+                    <p class="text-text-secondary text-xs font-sans leading-relaxed">${c.notes || 'No notes available'}</p>
+                    <div class="border-t border-text-primary/5 pt-2.5 flex flex-wrap gap-1">
+                        ${c.tags ? c.tags.split(',').map(t => `<span class="bg-bg-secondary text-text-secondary font-mono text-[9px] px-2 py-0.5 rounded border border-text-primary/5">${t.trim()}</span>`).join('') : ''}
                     </div>
-                </section>
+                `;
+                grid.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        function handleContactSubmit(event) {
+            event.preventDefault();
+            const name = document.getElementById('contact-name').value.trim();
+            const type = document.getElementById('contact-type').value;
+            const email = document.getElementById('contact-email').value.trim();
+            const phone = document.getElementById('contact-phone').value.trim();
+            const tags = document.getElementById('contact-tags').value.trim();
+            const notes = document.getElementById('contact-notes').value.trim();
+
+            if(!name) return;
+
+            vaultState.contacts.unshift({
+                id: 'c-' + Date.now(),
+                name, type, email, phone, tags, notes
+            });
+            saveStateToStorage();
+            toggleModal(false);
+            renderContactsGrid();
+            document.getElementById('add-contact-form').reset();
+        }
+
+        function deleteContactRecord(id) {
+            vaultState.contacts = vaultState.contacts.filter(c => c.id !== id);
+            saveStateToStorage();
+            renderContactsGrid();
+        }
+
+        function handleAssetTagSearchInput(val) {
+            vaultState.searchQuery = val.trim();
+            renderFileGrid();
+        }
+
+        function handleTagSearchInput(val) {
+            vaultState.searchQuery = val.trim();
+            renderContactsGrid();
+        }
+
+        function handleSortChange(val) {
+            vaultState.workspaceSort = val;
+            renderFileGrid();
+        }
+
+        function changeMenuSort(val) {
+            document.getElementById('file-sort-select').value = val;
+            handleSortChange(val);
+            toggleWorkspaceMenu(false);
+        }
+
+        // FIX: REAL-TIME CAPACITY MATRIX
+        // Computes total bytes ACTUALLY occupied in browser storage (raw size if no embed,
+        // or the larger of raw size and the base64 length of the embedded data URL).
+        // This makes the Used / Available figures react instantly to:
+        //   - Uploading a new image / audio file
+        //   - Updating an existing asset's cover art
+        //   - Pasting a data URL into the meta-registry inputs
+        //   - Deleting an asset
+        function getEffectiveAssetBytes(asset) {
+            let imageBytes = 0;
+            let audioBytes = 0;
+            if (asset.imageSource && typeof asset.imageSource === 'string') {
+                imageBytes = asset.imageSource.length;
+            }
+            if (asset.audioSource && typeof asset.audioSource === 'string') {
+                audioBytes = asset.audioSource.length;
+            }
+            const embedded = imageBytes + audioBytes;
+            const raw = asset.size || 0;
+            // Take the larger figure: base64 in localStorage is the dominant cost
+            // when present, otherwise we trust the original file.size value.
+            return Math.max(raw, embedded);
+        }
+
+        function updateDeviceCapacityMatrix() {
+            const aggregatedSize = vaultState.assets.reduce(
+                (acc, curr) => acc + getEffectiveAssetBytes(curr),
+                0
             );
-        };
+            const mbVal = (aggregatedSize / (1024 * 1024)).toFixed(2);
+            const maxCapacityBytes = 536870912; // 512 MB virtual ceiling
+            const maxMb = (maxCapacityBytes / (1024 * 1024)).toFixed(2);
+            const remainingBytes = Math.max(0, maxCapacityBytes - aggregatedSize);
+            const remainingMb = (remainingBytes / (1024 * 1024)).toFixed(2);
+            const allocationPct = ((aggregatedSize / maxCapacityBytes) * 100).toFixed(2);
 
-        const Music = () => {
-            return (
-                <section id="music" className="py-24 bg-black relative">
-                    <div className="max-w-7xl mx-auto px-6">
-                        <h2 className="text-5xl md:text-7xl font-bold text-red-600 mb-16 heading-font">{siteConfig.music.heading}</h2>
-                        
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                            {siteConfig.music.releases.map((release, idx) => (
-                                <div key={idx} className="group relative bg-neutral-900 border border-white/10 hover:border-red-600 transition-all duration-500 red-glow">
-                                    <div className="aspect-square overflow-hidden relative">
-                                        <img 
-                                            src={release.coverArt} 
-                                            alt={release.title} 
-                                            className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105"
-                                        />
-                                        <div className="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-all duration-500" />
-                                    </div>
-                                    <div className="p-6">
-                                        <div className="flex justify-between items-start mb-2">
-                                            <h3 className="text-2xl font-bold text-white heading-font">{release.title}</h3>
-                                            <span className="text-xs text-red-600 border border-red-600 px-2 py-1">{release.type}</span>
-                                        </div>
-                                        <p className="text-gray-400 text-sm mb-4 font-mono">{release.date} // {release.description}</p>
-                                        
-                                        <div className="flex flex-wrap gap-3">
-                                            {Object.entries(release.links).map(([platform, url]) => (
-                                                <a 
-                                                    key={platform} 
-                                                    href={url} 
-                                                    target="_blank" 
-                                                    rel="noreferrer"
-                                                    className="text-xs uppercase tracking-wider text-white border-b border-transparent hover:border-red-600 hover:text-red-600 transition-all"
-                                                >
-                                                    {platform}
-                                                </a>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-            );
-        };
+            const el = document.getElementById('device-storage-display');
+            if(el) {
+                el.innerHTML = `
+                    <span class="text-text-primary font-semibold">${mbVal} MB Used</span> / ${maxMb} MB Total
+                    <br>
+                    <span class="text-text-muted text-[10px] font-normal opacity-90">${remainingMb} MB Available · ${allocationPct}% utilized</span>
+                `;
+            }
+        }
 
-        const Videos = () => {
-            const [activeVideo, setActiveVideo] = useState(null);
+        function toggleOnboarding(show) {
+            document.getElementById('onboarding-modal').style.display = show ? 'flex' : 'none';
+        }
 
-            return (
-                <section id="videos" className="py-24 bg-neutral-950 relative">
-                    <div className="max-w-7xl mx-auto px-6">
-                        <h2 className="text-5xl md:text-7xl font-bold text-white mb-16 heading-font">{siteConfig.videos.heading}</h2>
-                        
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            {siteConfig.videos.items.map((video, idx) => (
-                                <div key={idx} className="relative group cursor-pointer" onClick={() => setActiveVideo(video.youtubeId)}>
-                                    <div className="aspect-video bg-black overflow-hidden border border-white/10 group-hover:border-red-600 transition-all duration-300">
-                                        <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500 grayscale group-hover:grayscale-0" />
-                                        <div className="absolute inset-0 flex items-center justify-center">
-                                            <div className="w-16 h-16 rounded-full border-2 border-white flex items-center justify-center text-white group-hover:bg-red-600 group-hover:border-red-600 transition-all duration-300">
-                                                {Icons.play}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <h3 className="mt-4 text-xl text-white font-bold tracking-wide heading-font group-hover:text-red-600 transition-colors">{video.title}</h3>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
+        function toggleModal(show) {
+            const m = document.getElementById('contact-modal');
+            m.className = show ? m.className.replace('hidden', 'flex') : m.className.replace('flex', 'hidden');
+        }
 
-                    {/* Video Modal */}
-                    {activeVideo && (
-                        <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4" onClick={() => setActiveVideo(null)}>
-                            <div className="w-full max-w-5xl aspect-video bg-black relative">
-                                <iframe 
-                                    width="100%" 
-                                    height="100%" 
-                                    src={`https://www.youtube.com/embed/${activeVideo}?autoplay=1`} 
-                                    title="YouTube video player" 
-                                    frameBorder="0" 
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                    allowFullScreen
-                                ></iframe>
-                                <button className="absolute -top-10 right-0 text-white hover:text-red-600" onClick={() => setActiveVideo(null)}>
-                                    {Icons.close}
-                                </button>
-                            </div>
-                        </div>
-                    )}
-                </section>
-            );
-        };
+        function toggleWorkspaceMenu(show) {
+            const dropdown = document.getElementById('workspace-dropdown');
+            if(!dropdown) return;
+            if (show !== undefined) {
+                show ? dropdown.classList.remove('hidden') : dropdown.classList.add('hidden');
+                return;
+            }
+            dropdown.classList.toggle('hidden');
+        }
 
-        const About = () => {
-            return (
-                <section id="about" className="py-24 bg-black relative overflow-hidden">
-                    <div className="max-w-7xl mx-auto px-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-                            <div className="relative">
-                                <div className="absolute -inset-4 border border-red-600/30 translate-x-4 translate-y-4" />
-                                <img 
-                                    src={siteConfig.about.image} 
-                                    alt="Avery Cyere" 
-                                    className="relative w-full grayscale contrast-125 hover:grayscale transition-all duration-700"
-                                />
-                            </div>
-                            <div>
-                                <h2 className="text-5xl md:text-7xl font-bold text-white mb-8 heading-font">{siteConfig.about.heading}</h2>
-                                <div className="space-y-6 mb-12">
-                                    {siteConfig.about.bio.map((paragraph, idx) => (
-                                        <p key={idx} className="text-gray-300 leading-relaxed font-mono text-sm md:text-base">
-                                            {paragraph}
-                                        </p>
-                                    ))}
-                                </div>
-                                <blockquote className="border-l-4 border-red-600 pl-6 py-2">
-                                    <p className="text-2xl md:text-3xl text-red-600 italic heading-font">
-                                        "{siteConfig.about.quote}"
-                                    </p>
-                                    <cite className="block mt-4 text-white not-italic tracking-widest text-sm">— {siteConfig.about.quoteAuthor}</cite>
-                                </blockquote>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            );
-        };
+        function toggleMobileSidebar(show) {
+            const sidebar = document.getElementById('app-sidebar');
+            const dimmer = document.getElementById('sidebar-dimmer');
+            if(!sidebar) return;
+            const shouldOpen = show !== undefined ? show : sidebar.classList.contains('-translate-x-full');
 
-        const Photos = () => {
-            const [lightbox, setLightbox] = useState(null);
+            if (shouldOpen) {
+                sidebar.classList.remove('-translate-x-full');
+                if(dimmer) dimmer.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                if(dimmer) dimmer.classList.add('hidden');
+            }
+        }
 
-            return (
-                <section id="photos" className="py-24 bg-neutral-950">
-                    <div className="max-w-7xl mx-auto px-6">
-                        <h2 className="text-5xl md:text-7xl font-bold text-red-600 mb-16 heading-font">{siteConfig.photos.heading}</h2>
-                        
-                        <div className="columns-1 md:columns-2 lg:columns-3 gap-4 space-y-4">
-                            {siteConfig.photos.images.map((img, idx) => (
-                                <div 
-                                    key={idx} 
-                                    className="break-inside-avoid relative group cursor-pointer overflow-hidden border border-white/5 hover:border-red-600 transition-all duration-300"
-                                    onClick={() => setLightbox(img.src)}
-                                >
-                                    <img 
-                                        src={img.src} 
-                                        alt={img.alt} 
-                                        className="w-full grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
-                                    />
-                                    <div className="absolute inset-0 bg-red-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                </div>
-                            ))}
-                        </div>
-                    </div>
+        window.addEventListener('DOMContentLoaded', () => {
+            initLocalStorageData();
+            currentAudio = document.getElementById('native-audio-node');
+            
+            const targetPill = document.getElementById('device-pill');
+            if (targetPill) {
+                const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+                targetPill.innerText = isMobile ? "MOBILE WEBKIT" : "V8 DESKTOP RUNTIME";
+            }
 
-                    {/* Lightbox */}
-                    {lightbox && (
-                        <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4" onClick={() => setLightbox(null)}>
-                            <img src={lightbox} className="max-w-full max-h-[90vh] object-contain border-2 border-red-600" alt="Full view" />
-                            <button className="absolute top-6 right-6 text-white hover:text-red-600" onClick={() => setLightbox(null)}>
-                                {Icons.close}
-                            </button>
-                        </div>
-                    )}
-                </section>
-            );
-        };
-
-        const Blog = () => {
-            const [expanded, setExpanded] = useState({});
-
-            const toggleExpand = (id) => {
-                setExpanded(prev => ({ ...prev, [id]: !prev[id] }));
-            };
-
-            return (
-                <section id="blog" className="py-24 bg-black">
-                    <div className="max-w-3xl mx-auto px-6">
-                        <h2 className="text-5xl md:text-7xl font-bold text-white mb-16 heading-font">{siteConfig.blog.heading}</h2>
-                        
-                        <div className="space-y-16">
-                            {siteConfig.blog.posts.map((post) => (
-                                <article key={post.id} className="border-b border-white/10 pb-12">
-                                    <div className="text-red-600 text-sm font-mono mb-2">{post.date}</div>
-                                    <h3 className="text-2xl font-bold text-white mb-4 heading-font hover:text-red-600 transition-colors cursor-pointer">
-                                        {post.title}
-                                    </h3>
-                                    
-                                    {post.type === 'quote' ? (
-                                        <blockquote className="text-xl italic text-gray-300 border-l-2 border-red-600 pl-4 my-4">
-                                            {post.content}
-                                        </blockquote>
-                                    ) : (
-                                        <p className={`text-gray-400 leading-relaxed font-mono ${expanded[post.id] ? '' : 'line-clamp-3'}`}>
-                                            {post.content}
-                                        </p>
-                                    )}
-                                    
-                                    <div className="mt-4 flex items-center justify-between">
-                                        <div className="flex gap-2">
-                                            {post.tags.map(tag => (
-                                                <span key={tag} className="text-xs text-red-600">#{tag}</span>
-                                            ))}
-                                        </div>
-                                        {post.type !== 'quote' && (
-                                            <button 
-                                                onClick={() => toggleExpand(post.id)}
-                                                className="text-xs uppercase tracking-widest text-white hover:text-red-600 transition-colors"
-                                            >
-                                                {expanded[post.id] ? 'Read Less' : 'Read More'}
-                                            </button>
-                                        )}
-                                    </div>
-                                </article>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-            );
-        };
-
-        const Merch = () => {
-            const { addToCart } = useCart();
-            const [selectedSizes, setSelectedSizes] = useState({});
-
-            const handleSizeSelect = (productId, size) => {
-                setSelectedSizes(prev => ({ ...prev, [productId]: size }));
-            };
-
-            return (
-                <section id="merch" className="py-24 bg-neutral-950">
-                    <div className="max-w-7xl mx-auto px-6">
-                        <h2 className="text-5xl md:text-7xl font-bold text-red-600 mb-16 heading-font">{siteConfig.merch.heading}</h2>
-                        
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                            {siteConfig.merch.products.map((product) => (
-                                <div key={product.id} className="group bg-black border border-white/10 hover:border-red-600 transition-all duration-300 red-glow">
-                                    <div className="aspect-[4/5] overflow-hidden relative">
-                                        <img 
-                                            src={product.image} 
-                                            alt={product.name} 
-                                            className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
-                                        />
-                                    </div>
-                                    <div className="p-6">
-                                        <div className="flex justify-between items-start mb-2">
-                                            <h3 className="text-xl font-bold text-white heading-font">{product.name}</h3>
-                                            <span className="text-xl text-red-600 font-mono">${product.price}</span>
-                                        </div>
-                                        <p className="text-gray-400 text-sm mb-6 font-mono">{product.description}</p>
-                                        
-                                        <div className="flex gap-2 mb-6">
-                                            {product.sizes.map(size => (
-                                                <button
-                                                    key={size}
-                                                    onClick={() => handleSizeSelect(product.id, size)}
-                                                    className={`w-10 h-10 border text-xs font-mono transition-all ${
-                                                        selectedSizes[product.id] === size 
-                                                        ? 'bg-red-600 border-red-600 text-white' 
-                                                        : 'border-white/30 text-white hover:border-red-600'
-                                                    }`}
-                                                >
-                                                    {size}
-                                                </button>
-                                            ))}
-                                        </div>
-                                        
-                                        <button 
-                                            onClick={() => {
-                                                if (selectedSizes[product.id]) {
-                                                    addToCart(product, selectedSizes[product.id]);
-                                                    alert(`Added ${product.name} (${selectedSizes[product.id]}) to cart`);
-                                                } else {
-                                                    alert("Please select a size");
-                                                }
-                                            }}
-                                            className="w-full bg-red-600 text-white py-3 text-sm tracking-widest hover:bg-white hover:text-black transition-all duration-300 font-bold"
-                                        >
-                                            ADD TO CART
-                                        </button>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-            );
-        };
-
-        const Connect = () => {
-            return (
-                <section id="connect" className="py-24 bg-black relative">
-                    <div className="max-w-4xl mx-auto px-6 text-center">
-                        <h2 className="text-5xl md:text-8xl font-bold text-red-600 mb-12 heading-font">{siteConfig.connect.heading}</h2>
-                        
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-20">
-                            {siteConfig.connect.links.map((link) => (
-                                <a 
-                                    key={link.platform}
-                                    href={link.url}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="flex flex-col items-center justify-center p-6 border border-white/20 hover:border-red-600 hover:bg-red-600/10 transition-all duration-300 group glitch-hover"
-                                >
-                                    <div className="text-white group-hover:text-red-600 mb-3 transition-colors">
-                                        {Icons[link.icon]}
-                                    </div>
-                                    <span className="text-xs tracking-widest text-white uppercase">{link.platform}</span>
-                                    {link.handle && <span className="text-[10px] text-gray-500 mt-1">{link.handle}</span>}
-                                </a>
-                            ))}
-                        </div>
-
-                        <div className="max-w-md mx-auto">
-                            <h3 className="text-xl text-white mb-6 tracking-widest">{siteConfig.connect.newsletter.heading}</h3>
-                            <form className="flex border border-white/30 focus-within:border-red-600 transition-colors" onSubmit={(e) => e.preventDefault()}>
-                                <input 
-                                    type="email" 
-                                    placeholder={siteConfig.connect.newsletter.placeholder}
-                                    className="flex-1 bg-transparent p-4 text-white placeholder-gray-600 outline-none font-mono text-sm"
-                                />
-                                <button className="px-6 text-white hover:text-red-600 transition-colors text-xl">
-                                    {siteConfig.connect.newsletter.buttonText}
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </section>
-            );
-        };
-
-        const Footer = () => {
-            return (
-                <footer className="py-12 bg-black border-t border-white/10">
-                    <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center">
-                        <p className="text-xs text-gray-500 font-mono mb-4 md:mb-0">{siteConfig.footer.copyright}</p>
-                        <p className="text-xs text-red-600 font-mono">{siteConfig.footer.credits}</p>
-                    </div>
-                </footer>
-            );
-        };
-
-        const App = () => {
-            return (
-                <CartProvider>
-                    <div className="min-h-screen bg-black text-white selection:bg-red-600 selection:text-white">
-                        <Nav />
-                        <Hero />
-                        <Music />
-                        <Videos />
-                        <About />
-                        <Photos />
-                        <Blog />
-                        <Merch />
-                        <Connect />
-                        <Footer />
-                    </div>
-                </CartProvider>
-            );
-        };
-
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+            renderFolderTree();
+            renderFileGrid();
+            updateDeviceCapacityMatrix();
+            // Make sure the audio buttons start in their disabled state
+            setAudioControlsState(false, false);
+            lucide.createIcons();
+        });
     </script>
 </body>
 </html>
